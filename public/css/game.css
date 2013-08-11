@@ -1,0 +1,18 @@
+#main_view {
+	position: relative;
+	width: 736px;
+	height: 480px;
+}
+
+#debug {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 12px;
+	font-family: sans-serif;
+	z-index: 1000;
+}
+#debug span {
+	margin-left: 5px;
+	background: #CCC;
+}

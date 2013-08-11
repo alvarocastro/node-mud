@@ -1,0 +1,10 @@
+{
+	"name": "MUD-v2",
+	"description": "MUD revival",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"mongojs": "*",
+		"express": "3.x"
+	}
+}

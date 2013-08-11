@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Game</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		<link rel="stylesheet" href="./css/game.css" />
+		<link rel="stylesheet" href="./css/game.chatlog.css" />
+		<link rel="stylesheet" href="./css/game.view.css" />
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="/js/packer.js"></script>
+		<script src="/js/game.main.js"></script>
+		<script>
+			var g;
+			$(function () {
+				g = new Game({
+					debug: true,
+
+					elements: {
+						debug: '#debug',
+						view: '#game_view',
+						log: '#chat_log'
+					}
+				});
+
+				/*
+				Game.preload(function () {
+					Game.init();
+				});
+				*/
+			});
+		</script>
+
+		<style>
+			* {margin: 0; padding: 0;}
+		</style>
+	</head>
+
+	<body>
+		<div id="main_view">
+
+			<div id="debug">
+				<span class="time" title="Last PHP script run time"></span>
+				<span class="memory" title="PHP's memory usage in the last request"></span>
+				<span class="ping" title="Ping between your browser and the server (updated every 10 seconds)"></span>
+			</div>
+
+			<div id="game_view">
+				<div class="wall wall_1_3"></div>
+				<div class="wall wall_1_4"></div><div class="border border_1_4"></div>
+
+				<div class="wall wall_2_1"></div>
+				<div class="wall wall_2_2"></div><div class="border border_2_2"></div>
+				<div class="wall wall_2_3"></div><div class="border border_2_3"></div>
+				<div class="wall wall_2_4"></div><div class="border border_2_4"></div>
+
+				<div class="wall wall_3_1_2"></div><div class="border border_3_1_2"></div>
+				<div class="wall wall_3_1_3"></div>
+				<div class="wall wall_3_1_4"></div><div class="border border_3_1_4"></div>
+
+				<div class="wall wall_3_2_2"></div><div class="border border_3_2_2"></div>
+				<div class="wall wall_3_2_3"></div>
+				<div class="wall wall_3_2_4"></div><div class="border border_3_2_4"></div>
+
+				<div class="wall wall_3_3_1"></div><div class="border border_3_3_1"></div>
+				<div class="wall wall_3_3_2"></div><div class="border border_3_3_2"></div>
+				<div class="wall wall_3_3_3"></div>
+				<div class="wall wall_3_3_4"></div><div class="border border_3_3_4"></div>
+				<div class="wall wall_3_3_5"></div><div class="border border_3_3_5"></div>
+
+				<div class="wall wall_3_4_1"></div>
+				<div class="wall wall_3_4_2"></div>
+				<div class="wall wall_3_4_3"></div>
+				<div class="wall wall_3_4_4"></div>
+				<div class="wall wall_3_4_5"></div>
+
+				<div class="wall wall_4_1"></div>
+				<div class="wall wall_4_2"></div><div class="border border_4_2"></div>
+				<div class="wall wall_4_3"></div><div class="border border_4_3"></div>
+				<div class="wall wall_4_4"></div><div class="border border_4_4"></div>
+
+				<div class="wall wall_5_3"></div>
+				<div class="wall wall_5_4"></div><div class="border border_5_4"></div>
+			</div>
+		</div>
+
+		<div id="chat_log">
+		</div>
+	</body>
+</html>

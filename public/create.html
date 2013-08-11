@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Map - Create</title>
+		<style>
+			.map {
+				position:relative;
+				border-bottom: 1px solid black;
+				border-right: 1px solid black;
+				width: 528px;
+				height: 528px;
+				background: #AA7744;
+			}
+
+			.map .square {
+				position: absolute;
+				border-top: 1px solid black;
+				border-left: 1px solid black;
+				height: 32px;
+				width: 32px;
+				color: white;
+				font-family: arial;
+				font-size: 10px;
+				text-align: center;
+			}
+
+			.map .square .wall {position: absolute;}
+			.map .square .wall:hover {border: 1px solid #00FFFF;}
+			.map .square .wall:hover.north,
+			.map .square .wall:hover.south {width: 30px; height: 4px;}
+
+			.map .square .wall:hover.east,
+			.map .square .wall:hover.west {width: 4px; height: 30px;}
+
+			.map .square .wall.north {top: 0; left: 0; width: 32px; height: 6px;}
+			.map .square .wall.east {top: 0; right: 0; width: 6px; height: 32px;}
+			.map .square .wall.south {bottom: 0; left: 0; width: 32px; height: 6px;}
+			.map .square .wall.west {top: 0; left: 0; width: 6px; height: 32px;}
+
+			.map .square .wall.texture {background: #000;}
+		</style>
+	</head>
+	<body>
+		<ul id="maps">
+
+		</ul>
+		<div>
+			<input id="map_id" />
+			<input id="map_load" type="button" />
+		</div>
+		<div class="map" id="map"></div>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.2.3/json3.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="/js/create.model.Map.js"></script>
+		<script src="/js/create.model.MapSquare.js"></script>
+		<script>
+			var MAP,
+				$map;
+
+			$(function () {
+				$map = $('#map');
+
+				$map.on('click', '.wall', function () {
+					var $wall = $(this),
+						$square = $wall.parent('.square'),
+						x = $square.attr('class').replace(/.*x([0-9]+).*/i, '$1'),
+						y = $square.attr('class').replace(/.*y([0-9]+).*/i, '$1'),
+						square = MAP.getSquare(x, y),
+						side = $wall.attr('class').replace(/wall|texture|\s*/ig, '');
+
+					var v = $wall.hasClass('texture');
+					square.textures[side] = v ? 0 : 1;
+					$wall.toggleClass('texture');
+				})
+
+				Map.findAll(function (data) {
+					var $maps = $('#maps');
+					for (var i = 0, map; map = data[i]; i++) {
+						$maps.append(
+							$('<li/>').append(
+								$('<a/>', {href: map._id, text: map.title + ' (' + map.code + ')'})
+							)
+						);
+					}
+				});
+
+
+
+				/*
+				MAP = Map.create({
+					code: 'level_1',
+					title: 'Level 1'
+				});
+				MAP.save();
+				//*/
+				//*
+				initMap();
+				MAP = new Map('52067e6a2dd065274b000001', function () {
+					drawMap(MAP);
+				});
+				//*/
+				//console.log(MAP.toJSON());
+
+				//MAP.save();
+
+			});
+
+			var initMap = function () {
+				var $sq, $square = $('<div/>', {'class': 'square'});
+				$square.append($('<div/>', {'class': 'wall north'}));
+				$square.append($('<div/>', {'class': 'wall east'}));
+				$square.append($('<div/>', {'class': 'wall south'}));
+				$square.append($('<div/>', {'class': 'wall west'}));
+				for (var y = 0; y < Map.size; y++) {
+					for (var x = 0; x < Map.size; x++) {
+						$sq = $square.clone().addClass('x' + x + 'y' + y);
+						$map.append($sq);
+						$sq.css({
+							left: $sq.outerWidth() * x,
+							top: $sq.outerHeight() * y
+						});
+					}
+				}
+			};
+
+			var drawMap = function (map) {
+				var sides = ['north','east','south','west'],
+					$square, square;
+				for (var y = 0; y < Map.size; y++) {
+					for (var x = 0; x < Map.size; x++) {
+						square = map.getSquare(x, y);
+						$square = $map.find('.square.x' + x + 'y' + y);
+						for (var i = 0, side; side = sides[i]; i++) {
+							$square.find('.wall.' + side).addClass(parseInt(square.textures[side]) == 1 ? 'texture' : '');
+						}
+					}
+				}
+			};
+
+
+
+			//map.save();
+/*
+			var createSquare = function ($map, data) {
+				var $square = $('<div/>', {'class': 'square'});
+				$map.append($square);
+				$square.css({
+					top: $square.height() * data.y,
+					left: $square.width() * data.x
+				});
+			};
+
+			var getMapData = function (id) {
+				var req = $.getJSON('/map/' + id);
+				req.success(function (data) {
+					return data;
+				});
+				req.error(function (data) {
+					console.log('Error: getMapData(' + id + ')');
+					return false;
+				});
+			};
+
+			$(function () {
+				var $map = $('#map');
+
+				//createSquare($map, {x:2,y:3});
+
+				$('#map_load').on('click', function (e) {
+					MAP = getMapData($('#map_id').val());
+				});
+
+
+			});
+*/
+		</script>
+	</body>
+</html>
