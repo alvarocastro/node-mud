@@ -30,15 +30,169 @@ Character.findOneById = function (id, callback) {
 };
 
 Character.prototype = {
-	save: function (data, callback) {
-		/*
+	save: function (callback) {
 		db.character.update(
-			{code: data.code},
-			{$set: data}, 
+			{_id: this.id},
+			{
+				$set: {
+					name: this.name,
+					position: {
+						x: this.position.x,
+						y: this.position.y,
+						direction: this.position.direction,
+						map: this.position.map.code
+					}
+				}
+			}, 
 			{upsert: true},
 			callback
 		);
-		*/
+	},
+
+	moveForward: function (callback) {
+		var x = this.position.x,
+			y = this.position.y;
+
+		switch (this.position.direction) {
+			case 'north':
+				y--;
+				break;
+			case 'east':
+				x++;
+				break;
+			case 'south':
+				y++;
+				break;
+			case 'west':
+				x--;
+				break;
+		}
+
+		this.position.x = x;
+		this.position.y = y;
+
+		this.save(callback);
+	},
+
+	moveBackwards: function (callback) {
+		var x = this.position.x,
+			y = this.position.y;
+
+		switch (this.position.direction) {
+			case 'north':
+				y++;
+				break;
+			case 'east':
+				x--;
+				break;
+			case 'south':
+				y--;
+				break;
+			case 'west':
+				x++;
+				break;
+		}
+
+		this.position.x = x;
+		this.position.y = y;
+
+		this.save(callback);
+	},
+
+	moveLeft: function (callback) {
+		var x = this.position.x,
+			y = this.position.y;
+
+		switch (this.position.direction) {
+			case 'north':
+				x--;
+				break;
+			case 'east':
+				y--;
+				break;
+			case 'south':
+				x++;
+				break;
+			case 'west':
+				y++;
+				break;
+		}
+
+		this.position.x = x;
+		this.position.y = y;
+
+		this.save(callback);
+	},
+
+	moveRight: function (callback) {
+		var x = this.position.x,
+			y = this.position.y;
+
+		switch (this.position.direction) {
+			case 'north':
+				x++;
+				break;
+			case 'east':
+				y++;
+				break;
+			case 'south':
+				x--;
+				break;
+			case 'west':
+				y--;
+				break;
+		}
+
+		this.position.x = x;
+		this.position.y = y;
+
+		this.save(callback);
+	},
+
+	turnLeft: function (callback) {
+		var direction = this.position.direction;
+
+		switch (this.position.direction) {
+			case 'north':
+				direction = 'west';
+				break;
+			case 'east':
+				direction = 'north';
+				break;
+			case 'south':
+				direction = 'east';
+				break;
+			case 'west':
+				direction = 'south';
+				break;
+		}
+
+		this.position.direction = direction;
+
+		this.save(callback);
+	},
+
+	turnRight: function (callback) {
+		var direction = this.position.direction;
+
+		switch (this.position.direction) {
+			case 'north':
+				direction = 'east';
+				break;
+			case 'east':
+				direction = 'south';
+				break;
+			case 'south':
+				direction = 'west';
+				break;
+			case 'west':
+				direction = 'north';
+				break;
+		}
+
+		this.position.direction = direction;
+
+		this.save(callback);
 	},
 
 	getFov: function () {

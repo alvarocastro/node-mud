@@ -62,6 +62,7 @@ Game.prototype = {
  */
 Game.Connector = function (game) {
 	this.game = game;
+	this.endpoint = '/game';
 
 	this.actions = {
 		move_forward: 'move_forward'
@@ -74,7 +75,7 @@ Game.Connector.prototype = {
 		params.r = (new Date()).getTime();
 
 		var instance = this;
-		$.getJSON('/game', params, function (data) {
+		$.getJSON(this.endpoint, params, function (data) {
 			var character = data.character ? Packer.unpack(data.character, 'character') : null,
 				fov = data.fov ? Packer.unpack(data.fov, 'fov') : null;
 
@@ -226,8 +227,10 @@ Game.Controls = function (game) {
 	this.bind(this.turnLeft, [key.NUMPAD_7, key.NUMPAD_1]);
 	this.bind(this.turnRight, [key.NUMPAD_9, key.NUMPAD_3]);
 	
-	
-	$(document).bind('keydown', $.proxy(this.keyPress, this));
+	var instance = this;
+	$(document).bind('keydown', function (e) {
+		instance.keyPress(e);
+	});
 };
 
 Game.Controls.prototype = {
@@ -240,32 +243,47 @@ Game.Controls.prototype = {
 	keyPress: function (e) {
 		var key = e.keyCode;
 		if (this.bindings[key]) {
-			this.bindings[key]();
+			this.bindings[key].call(this);
 			e.preventDefault();
 		}
 	},
 
 	moveForward: function () {
-		this.game.send({action: 'move_forward'});
+		this.game.connector.send({action: 'move_forward'});
 	},
 
 	moveBackwards: function () {
-		this.game.send({action: 'move_backwards'});
+		this.game.connector.send({action: 'move_backwards'});
 	},
 
 	moveLeft: function () {
-		this.game.send({action: 'move_left'});
+		this.game.connector.send({action: 'move_left'});
 	},
 
 	moveRight: function () {
-		this.game.send({action: 'move_right'});
+		this.game.connector.send({action: 'move_right'});
 	},
 
 	turnLeft: function () {
-		this.game.send({action: 'turn_left'});
+		this.game.connector.send({action: 'turn_left'});
 	},
 
 	turnRight: function () {
-		this.game.send({action: 'turn_right'});
+		this.game.connector.send({action: 'turn_right'});
+	}
+};
+
+
+
+
+var TEST = function () {
+	var i, k, e = jQuery.Event("keydown"), ks = [38,37,40,40,39,39,38,38,37,40];
+	for (i = 0; k = ks[i]; i++) {
+		setTimeout((function (k) {
+			return function () {
+				e.keyCode = k;
+				$(document).trigger(e);
+			}
+		})(k), i * 100);
 	}
 };

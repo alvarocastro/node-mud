@@ -50,15 +50,42 @@ var cid = '520454659cad8f5f39000001';
 app.get('/game', function (req, res) {
 	//*
 	Character.findOneById(cid, function (error, data) {
-		var c = new Character(data);
+		var c = new Character(data),
+			action = req.query.action;
+
+		var cb = function () {
+			res.send({
+				error: error,
+				character: Packer.pack(c.position, 'character'),
+				fov: Packer.pack(c.getFov(), 'fov')
+			});
+		};
 
 
-
-		res.send({
-			error: error,
-			character: Packer.pack(c.position, 'character'),
-			fov: Packer.pack(c.getFov(), 'fov')
-		});
+		switch (action) {
+			case 'move_forward':
+				c.moveForward(cb);
+				break;
+			case 'move_backwards':
+				c.moveBackwards(cb);
+				break;
+			case 'move_left':
+				c.moveLeft(cb);
+				break;
+			case 'move_right':
+				c.moveRight(cb);
+				break;
+			case 'turn_left':
+				c.turnLeft(cb);
+				break;
+			case 'turn_right':
+				c.turnRight(cb);
+				break;
+			default:
+				console.log('DEFAULT');
+				cb();
+				break;
+		}
 	});
 });
 
