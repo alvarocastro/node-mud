@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Game</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		<link rel="stylesheet" href="./css/game.css" />
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="/js/packer.js"></script>
+		<script src="/js/game.main.js"></script>
+		<script>
+			/*
+			var g;
+			$(function () {
+				g = new Game({
+					debug: true,
+
+					elements: {
+						debug: '#debug',
+						view: '#game_view',
+						log: '#chat_log'
+					}
+				});
+			});
+			*/
+
+			var r = function (s) {
+				$('.cube')
+					.removeClass (function (index, css) {
+						return (css.match(/\bshow-\S+/g) || []).join(' ');
+					})
+					.addClass('show-' + s);
+			};
+		</script>
+
+		<style>
+			* {margin: 0; padding: 0;}
+		</style>
+
+		<style>
+			#main_view {
+				margin: 30px 0 0 30px;
+				border: 1px solid red;
+				background: url('../base/bg.png') -193px -44px;
+				/*z-index: 1;*/
+				-webkit-perspective: 1000px;
+				-webkit-perspective-origin: 50% 30%;
+			}
+
+			/**
+			 * game.view.css
+			 */
+			#game_view {
+				z-index: 1;
+				/*overflow: hidden;*/
+				width: 736px;
+				height: 480px;
+
+				color: #FFF;
+
+				position: relative;
+				-webkit-transform-style: preserve-3d;
+				-webkit-transform: rotateY(   0deg );
+				/*-webkit-perspective: 1000px;
+				-webkit-perspective-origin: 50% 30%;*/
+			}
+
+			#game_view .cube {
+				width: 592px;
+				height: 386px;
+				margin: -193px -296px;
+				top: 50%;
+				left: 50%;
+				position: absolute;
+				-webkit-transform-style: preserve-3d;
+				-webkit-transition: -webkit-transform 1s;
+				-webkit-transform-origin: 50% 50%;
+			}
+
+			#game_view .cube .side {
+				display: block;
+				position: absolute;
+				border: 2px solid orange;
+			}
+			#game_view .cube .front,
+			#game_view .cube .back,
+			#game_view .cube .left,
+			#game_view .cube .right {
+				width: 588px;
+				height: 382px;
+			}
+			#game_view .cube .top,
+			#game_view .cube .bottom {
+				width: 588px;
+				height: 588px;
+			}
+
+			#game_view .cube .front  { -webkit-transform: rotateY(   0deg ) translateZ( 296px ); }
+			#game_view .cube .back   { -webkit-transform: rotateY( 180deg ) translateZ( 296px ); }
+			#game_view .cube .right  { -webkit-transform: rotateY(  90deg ) translateZ( 296px ); }
+			#game_view .cube .left   { -webkit-transform: rotateY( -90deg ) translateZ( 296px ); }
+			#game_view .cube .top    { -webkit-transform: rotateX(  90deg ) translateZ( 296px ); }
+			#game_view .cube .bottom { -webkit-transform: rotateX( -90deg ) translateZ(  90px ); }
+
+/*
+			#game_view .cube.show-front  { -webkit-transform: translateZ( -296px ) rotateY(    0deg ); }
+			#game_view .cube.show-back   { -webkit-transform: translateZ( -296px ) rotateY( -180deg ); }
+			#game_view .cube.show-right  { -webkit-transform: translateZ( -296px ) rotateY(  -90deg ); }
+			#game_view .cube.show-left   { -webkit-transform: translateZ( -296px ) rotateY(   90deg ); }
+			#game_view .cube.show-top    { -webkit-transform: translateZ( -296px ) rotateX(  -90deg ); }
+			#game_view .cube.show-bottom { -webkit-transform: translateZ(  -90px ) rotateX(   90deg ); }
+*/
+/*
+			#game_view .cube.slot_2_1 { top: 240px; left: -224px; }
+			#game_view .cube.slot_2_2 { top: 240px; left:  368px; }
+			#game_view .cube.slot_2_3 { top: 240px; left:  960px; }
+*/
+			/*#game_view .cube.slot_2_1 { top: 240px; left: -224px; }*/
+			/*#game_view .slot_2_2 { -webkit-transform: translateX( -296px ) }*/
+			/*#game_view .cube.slot_2_3 { top: 240px; left:  960px; }*/
+
+
+
+			#game_view .cube .side {background-repeat:no-repeat;}
+			#game_view .cube .side.texture1 {background-image: url('../base/texture1.png');}
+
+
+
+		</style>
+	</head>
+
+	<body>
+		<div id="main_view">
+			<div id="game_view">
+				<!--
+				<div class="cube slot_2_1 show-front">
+					<div class="side texture1 front">Front</div>
+					<div class="side back">Back</div>
+					<div class="side left">Left</div>
+					<div class="side texture1 right">Right</div>
+					<div class="side top">Top</div>
+					<div class="side bottom">Bottom</div>
+				</div>
+				-->
+				<div class="slot slot_2_2">
+					<div class="cube show-front">
+						<div class="side front">Front</div>
+						<div class="side texture1 back">Back</div>
+						<div class="side left">Left</div>
+						<div class="side right">Right</div>
+						<div class="side top">Top</div>
+						<div class="side bottom">Bottom</div>
+					</div>
+				</div>
+				<!--
+				<div class="cube slot_2_3 show-front">
+					<div class="side front">Front</div>
+					<div class="side back">Back</div>
+					<div class="side left">Left</div>
+					<div class="side right">Right</div>
+					<div class="side top">Top</div>
+					<div class="side bottom">Bottom</div>
+				</div>
+				-->
+			</div>
+				<!--
+				<div class="wall wall_1_3"></div>
+				<div class="wall wall_1_4"></div><div class="border border_1_4"></div>
+
+				<div class="wall wall_2_1"></div>
+				<div class="wall wall_2_2"></div><div class="border border_2_2"></div>
+				<div class="wall wall_2_3"></div><div class="border border_2_3"></div>
+				<div class="wall wall_2_4"></div><div class="border border_2_4"></div>
+
+				<div class="wall wall_3_1_2"></div><div class="border border_3_1_2"></div>
+				<div class="wall wall_3_1_3"></div>
+				<div class="wall wall_3_1_4"></div><div class="border border_3_1_4"></div>
+
+				<div class="wall wall_3_2_2"></div><div class="border border_3_2_2"></div>
+				<div class="wall wall_3_2_3"></div>
+				<div class="wall wall_3_2_4"></div><div class="border border_3_2_4"></div>
+
+				<div class="wall wall_3_3_1"></div><div class="border border_3_3_1"></div>
+				<div class="wall wall_3_3_2"></div><div class="border border_3_3_2"></div>
+				<div class="wall wall_3_3_3"></div>
+				<div class="wall wall_3_3_4"></div><div class="border border_3_3_4"></div>
+				<div class="wall wall_3_3_5"></div><div class="border border_3_3_5"></div>
+
+				<div class="wall wall_3_4_1"></div>
+				<div class="wall wall_3_4_2"></div>
+				<div class="wall wall_3_4_3"></div>
+				<div class="wall wall_3_4_4"></div>
+				<div class="wall wall_3_4_5"></div>
+
+				<div class="wall wall_4_1"></div>
+				<div class="wall wall_4_2"></div><div class="border border_4_2"></div>
+				<div class="wall wall_4_3"></div><div class="border border_4_3"></div>
+				<div class="wall wall_4_4"></div><div class="border border_4_4"></div>
+
+				<div class="wall wall_5_3"></div>
+				<div class="wall wall_5_4"></div><div class="border border_5_4"></div>
+				-->
+		</div>
+	</body>
+</html>
