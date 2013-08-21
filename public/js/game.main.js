@@ -80,6 +80,7 @@ Game.Connector.prototype = {
 				fov = data.fov ? Packer.unpack(data.fov, 'fov') : null;
 
 			if (character && fov) {
+				console.log(character.x, character.y);
 				instance.game.view.render(character, fov);
 			}
 

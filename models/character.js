@@ -6,8 +6,8 @@ var Character = function (data) {
 	this.id = data._id;
 	this.name = data.name;
 	this.position = data.position;
-	this.position.map = Map.get(data.position.map);
 	this.stats = {};
+	this.map = Map.get(data.position.map);
 };
 Character.create = function (data, callback) {
 	db.character.insert({
@@ -36,12 +36,7 @@ Character.prototype = {
 			{
 				$set: {
 					name: this.name,
-					position: {
-						x: this.position.x,
-						y: this.position.y,
-						direction: this.position.direction,
-						map: this.position.map.code
-					}
+					position: this.position
 				}
 			}, 
 			{upsert: true},
@@ -49,29 +44,51 @@ Character.prototype = {
 		);
 	},
 
-	moveForward: function (callback) {
-		var x = this.position.x,
-			y = this.position.y;
+	changePosition: function (position) {
+		this.position = {
+			x: position.x || this.position.x,
+			y: position.y || this.position.y,
+			direction: position.direction || this.position.direction,
+			map: position.map || this.position.map.code
+		};
+	},
 
-		switch (this.position.direction) {
-			case 'north':
-				y--;
-				break;
-			case 'east':
-				x++;
-				break;
-			case 'south':
-				y++;
-				break;
-			case 'west':
-				x--;
-				break;
+	move: function (move, callback) {
+		var od = {
+				x: this.position.x,
+				y: this.position.y,
+				direction: this.position.direction,
+				map: this.position.map,
+			},
+			td = {
+				x: this.position.x,
+				y: this.position.y,
+				direction: this.position.direction,
+				map: this.position.map,
+			};
+
+		switch (move) {
+			case 'forward': this.moveForward(td);break;
 		}
 
-		this.position.x = x;
-		this.position.y = y;
+		var square = this.map.getSquare(od.x, od.y);
+		var targetSquare = this.map.getSquare(td.x, td.y);
 
-		this.save(callback);
+
+		square.triggerOnLeave(od, td);
+		targetSquare.triggerOnEnter();
+		targetSquare.triggerOnLook();
+
+		//this.save(callback);
+	},
+
+	moveForward: function (td) {
+		switch (this.position.direction) {
+			case 'north':td.y--;break;
+			case 'east': td.x++;break;
+			case 'south':td.y++;break;
+			case 'west': td.x--;break;
+		}
 	},
 
 	moveBackwards: function (callback) {
@@ -79,18 +96,10 @@ Character.prototype = {
 			y = this.position.y;
 
 		switch (this.position.direction) {
-			case 'north':
-				y++;
-				break;
-			case 'east':
-				x--;
-				break;
-			case 'south':
-				y--;
-				break;
-			case 'west':
-				x++;
-				break;
+			case 'north':y++;break;
+			case 'east': x--;break;
+			case 'south':y--;break;
+			case 'west': x++;break;
 		}
 
 		this.position.x = x;
@@ -104,18 +113,10 @@ Character.prototype = {
 			y = this.position.y;
 
 		switch (this.position.direction) {
-			case 'north':
-				x--;
-				break;
-			case 'east':
-				y--;
-				break;
-			case 'south':
-				x++;
-				break;
-			case 'west':
-				y++;
-				break;
+			case 'north':x--;break;
+			case 'east': y--;break;
+			case 'south':x++;break;
+			case 'west': y++;break;
 		}
 
 		this.position.x = x;
@@ -129,18 +130,10 @@ Character.prototype = {
 			y = this.position.y;
 
 		switch (this.position.direction) {
-			case 'north':
-				x++;
-				break;
-			case 'east':
-				y++;
-				break;
-			case 'south':
-				x--;
-				break;
-			case 'west':
-				y--;
-				break;
+			case 'north':x++;break;
+			case 'east': y++;break;
+			case 'south':x--;break;
+			case 'west': y--;break;
 		}
 
 		this.position.x = x;
@@ -153,18 +146,10 @@ Character.prototype = {
 		var direction = this.position.direction;
 
 		switch (this.position.direction) {
-			case 'north':
-				direction = 'west';
-				break;
-			case 'east':
-				direction = 'north';
-				break;
-			case 'south':
-				direction = 'east';
-				break;
-			case 'west':
-				direction = 'south';
-				break;
+			case 'north':direction = 'west';break;
+			case 'east': direction = 'north';break;
+			case 'south':direction = 'east';break;
+			case 'west': direction = 'south';break;
 		}
 
 		this.position.direction = direction;
@@ -176,18 +161,10 @@ Character.prototype = {
 		var direction = this.position.direction;
 
 		switch (this.position.direction) {
-			case 'north':
-				direction = 'east';
-				break;
-			case 'east':
-				direction = 'south';
-				break;
-			case 'south':
-				direction = 'west';
-				break;
-			case 'west':
-				direction = 'north';
-				break;
+			case 'north':direction = 'east';break;
+			case 'east': direction = 'south';break;
+			case 'south':direction = 'west';break;
+			case 'west': direction = 'north';break;
 		}
 
 		this.position.direction = direction;
@@ -226,7 +203,7 @@ Character.prototype = {
 				break;
 		}
 
-		return p.map.getSquares(r);
+		return this.map.getSquares(r);
 	}
 };
 

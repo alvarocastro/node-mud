@@ -73,8 +73,13 @@ Map.prototype = {
 		);
 	},
 
+	getSquare: function (x, y) {
+		return this.squares[x + '_' + y];
+	},
+
 	getSquares: function (range) {
-		var squares = {},
+		var square,
+			squares = {},
 			srange = {
 				x: {
 					start: range.x.start > range.x.end ? range.x.end : range.x.start,
@@ -88,7 +93,10 @@ Map.prototype = {
 
 		for (var y = srange.y.start; y <= srange.y.end; y++) {
 			for (var x = srange.x.start; x <= srange.x.end; x++) {
-				squares[x + '_' + y] = this.squares[x + '_' + y];
+				square = this.squares[x + '_' + y];
+				if (square) {
+					squares[x + '_' + y] = this.squares[x + '_' + y];
+				}
 			}
 		}
 		
@@ -96,5 +104,14 @@ Map.prototype = {
 	}
 };
 
+/*
+var Square = function (data) {
+
+};
+
+Square.prototype = {
+};
+*/
 
 exports.Map = Map;
+//exports.Square = Square;

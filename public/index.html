@@ -35,40 +35,9 @@
 		<style>
 			* {margin: 0; padding: 0;}
 		</style>
-
-		<style>
-			#test {
-				width: 480px;
-				height: 320px;
-				border: 1px solid red;
-				position: relative;
-
-				-webkit-perspective: 800;
-				-webkit-perspective-origin: 50% 50%;
-			}
-			#test .wall1 {
-				width: 100px;
-				height: 80px;
-				position: absolute;
-				top: 80px;
-				left: 40px;
-				background: #ccc;
-				-webkit-transform: rotateY(90deg) rotateX(0deg);
-
-			}
-			#test .wall1.yo {
-				-webkit-transform: translateZ( -100px ) rotateY(  -90deg );
-			}
-		</style>
 	</head>
 
 	<body>
-		<div id='test'>
-
-			<div class="wall1"></div>
-		</div>
-
-
 		<div id="main_view">
 			<div id="debug">
 				<span class="time" title="Last PHP script run time"></span>

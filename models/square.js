@@ -6,6 +6,49 @@ var Square = function (data) {
 };
 
 Square.prototype = {
+	//square
+	triggerOnRotate: function () {
+		console.log('- EVENT: onRotate(x:' + this.x + '|y:' + this.y + ')');
+	},
+
+	//square
+	triggerOnEnter: function () {
+		console.log('- EVENT: onEnter(x:' + this.x + '|y:' + this.y + ')');
+	},
+
+	//square
+	triggerOnLeave: function () {
+		console.log('- EVENT: onLeave(x:' + this.x + '|y:' + this.y + ')');
+	},
+
+	//wall
+	triggerOnLook: function () {
+		console.log('- EVENT: onLook(x:' + this.x + '|y:' + this.y + ')');
+	},
+
+	//wall
+	triggerOnWalk: function () {
+		console.log('- EVENT: onWalk(x:' + this.x + '|y:' + this.y + ')');
+	},
+
+	//wall|square
+	triggerOnItemUse: function () {
+		console.log('- EVENT: onItemUse(x:' + this.x + '|y:' + this.y + ')');
+	},
+
+	executeEvents: function (events) {
+		for (var i = 0, event; event = events[i]; i++) {
+			switch (event.type) {
+				case 'log':
+					console.log('- EVENT EXECUTE: Ohai');
+					break;
+				default:
+					console.log('- EVENT EXECUTE: DEFAULT');
+					break;
+			}
+		}
+	},
+
 	toJSON: function () {
 		return {
 			x: parseInt(this.x),

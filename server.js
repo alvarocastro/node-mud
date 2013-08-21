@@ -4,7 +4,8 @@ var express = require('express')
 	Character = require('./models/character.js').Character,
 	Packer = require('./public/js/packer.js');
 
-
+console.log('################################################################################' + 
+	'START: ' + (new Date()).getTime());
 
 var app = express();
 
@@ -19,7 +20,6 @@ Map.findAll(function (error, data) {
 		Map.cache[map.code] = new Map(map);
 	}
 
-	//console.log(Map.get('level_1'));
 	app.listen(3000);
 });
 
@@ -40,6 +40,9 @@ Character.create({name: 'Moltar'}, function (error, data) {
 app.get('/', function (req, res) {
 	res.sendfile(__dirname + '/public/index.html');
 });
+app.get('/3d', function (req, res) {
+	res.sendfile(__dirname + '/public/index3d.html');
+});
 
 app.get('/create', function (req, res) {
 	res.sendfile(__dirname + '/public/create.html');
@@ -48,7 +51,7 @@ app.get('/create', function (req, res) {
 var cid = '520454659cad8f5f39000001';
 
 app.get('/game', function (req, res) {
-	//*
+	console.log('# REQUEST: ' + (new Date()).getTime());
 	Character.findOneById(cid, function (error, data) {
 		var c = new Character(data),
 			action = req.query.action;
@@ -64,25 +67,31 @@ app.get('/game', function (req, res) {
 
 		switch (action) {
 			case 'move_forward':
+				console.log('- ACTION: move_forward');
 				c.moveForward(cb);
 				break;
 			case 'move_backwards':
+				console.log('- ACTION: move_backwards');
 				c.moveBackwards(cb);
 				break;
 			case 'move_left':
+				console.log('- ACTION: move_left');
 				c.moveLeft(cb);
 				break;
 			case 'move_right':
+				console.log('- ACTION: move_right');
 				c.moveRight(cb);
 				break;
 			case 'turn_left':
+				console.log('- ACTION: turn_left');
 				c.turnLeft(cb);
 				break;
 			case 'turn_right':
+				console.log('- ACTION: turn_right');
 				c.turnRight(cb);
 				break;
 			default:
-				console.log('DEFAULT');
+				console.log('- ACTION: DEFAULT');
 				cb();
 				break;
 		}
