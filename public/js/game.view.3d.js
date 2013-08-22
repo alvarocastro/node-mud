@@ -52,6 +52,7 @@ Game.View.prototype = {
 		//this.element.rmClass(/\bshow-\S+/g).addClass('show-' + d);
 
 		this.element.addClass('animate');
+		this.element.bind('transitionend', function () {alert('ando?');}, false);
 		this.element.rmClass(/\banimation-\S+/g).addClass('animation-' + action);
 		var inst = this;
 		setTimeout(function () {
