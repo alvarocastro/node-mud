@@ -68,7 +68,7 @@ app.get('/game', function (req, res) {
 		switch (action) {
 			case 'move_forward':
 				console.log('- ACTION: move_forward');
-				c.moveForward(cb);
+				c.move('forward', cb);
 				break;
 			case 'move_backwards':
 				console.log('- ACTION: move_backwards');

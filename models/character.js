@@ -70,7 +70,7 @@ Character.prototype = {
 		switch (move) {
 			case 'forward': this.moveForward(td);break;
 		}
-
+/*
 		var square = this.map.getSquare(od.x, od.y);
 		var targetSquare = this.map.getSquare(td.x, td.y);
 
@@ -78,8 +78,10 @@ Character.prototype = {
 		square.triggerOnLeave(od, td);
 		targetSquare.triggerOnEnter();
 		targetSquare.triggerOnLook();
+*/
+		this.position = td;
 
-		//this.save(callback);
+		this.save(callback);
 	},
 
 	moveForward: function (td) {

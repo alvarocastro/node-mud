@@ -43,18 +43,23 @@ Game.View.prototype = {
 		this.element.find('.side').rmClass(/\btexture\S+/g);
 	},
 
-	render: function (character, squares) {
+	render: function (character, squares, action) {
 		var x = character.x,
 			y = character.y,
-			d = character.direction;
+			d = character.direction,
+			delay = action ? 500 : 0;
 
-		this.element.rmClass(/\bshow-\S+/g).addClass('show-' + d);
+		//this.element.rmClass(/\bshow-\S+/g).addClass('show-' + d);
 
+		this.element.addClass('animate');
+		this.element.rmClass(/\banimation-\S+/g).addClass('animation-' + action);
 		var inst = this;
-		//setTimeout(function () {
+		setTimeout(function () {
 			inst.clear();
+			inst.element.removeClass('animate');
+			inst.element.rmClass(/\banimation-\S+/g);
 
-			//inst.element.rmClass(/\bfacing-\S+/g).addClass('facing-' + d);
+			inst.element.rmClass(/\bfacing-\S+/g).addClass('facing-' + d);
 
 			var i, b, e;
 			for(i in squares) {
@@ -88,7 +93,7 @@ Game.View.prototype = {
 					e.find('.west').addClass('texture' + b.textures.west);
 				}
 			}
-		//}, 1000);
+		}, delay);
 
 		/*
 		var instance = this;
