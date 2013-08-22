@@ -4,7 +4,7 @@ var express = require('express')
 	Character = require('./models/character.js').Character,
 	Packer = require('./public/js/packer.js');
 
-console.log('################################################################################' + 
+console.log('################################################################################' + "\n" +
 	'START: ' + (new Date()).getTime());
 
 var app = express();
