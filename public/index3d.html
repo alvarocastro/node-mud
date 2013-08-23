@@ -9,8 +9,11 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		<script src="/js/packer.js"></script>
 		<script src="/js/game.main.js"></script>
+		<script src="/js/game.connector.js"></script>
+		<script src="/js/game.controls.js"></script>
+		<script src="/js/game.view.3d.js"></script>
 		<script>
-			/*
+
 			var g;
 			$(function () {
 				g = new Game({
@@ -23,7 +26,7 @@
 					}
 				});
 			});
-			*/
+
 
 			var r = function (s) {
 				$('.cube')
@@ -44,7 +47,7 @@
 				border: 1px solid red;
 				background: url('../base/bg.png') -193px -44px;
 				/*z-index: 1;*/
-				-webkit-perspective: 611px; /*762px*/
+				-webkit-perspective: 762px; /*611px*/ /*1000px*/
 				-webkit-perspective-origin: 50% 32%;
 			}
 
@@ -61,21 +64,27 @@
 
 				position: relative;
 				-webkit-transform-style: preserve-3d;
-				-webkit-transform: rotateY(   0deg ) translateZ(-286px);
 				-webkit-transition: -webkit-transform 1s;
 				/*-webkit-perspective: 1000px;
 				-webkit-perspective-origin: 50% 30%;*/
 			}
-
+/*
+			#game_view.show-north { -webkit-transform: rotateY(   0deg ) translateZ( -286px ); }
+			#game_view.show-east  { -webkit-transform: rotateY(  90deg ) translateZ( -286px ); }
+			#game_view.show-south { -webkit-transform: rotateY( 180deg ) translateZ( -286px ); }
+			#game_view.show-west  { -webkit-transform: rotateY( -90deg ) translateZ( -286px ); }
+*/
 			#game_view .cube {
 				font-size: 50px;
 				font-family: sans-serif;
+				/*
 				width: 592px;
 				height: 386px;
 				margin: -193px -296px;
 				top: 50%;
 				left: 50%;
 				position: absolute;
+				*/
 				-webkit-transform-style: preserve-3d;
 			}
 			#game_view .cube .bottom {
@@ -89,10 +98,10 @@
 
 				-webkit-backface-visibility: hidden;
 			}
-			#game_view .cube .front,
-			#game_view .cube .back,
-			#game_view .cube .left,
-			#game_view .cube .right {
+			#game_view .cube .north,
+			#game_view .cube .south,
+			#game_view .cube .east,
+			#game_view .cube .west {
 				width: 588px;
 				height: 382px;
 			}
@@ -102,21 +111,31 @@
 				height: 588px;
 			}
 
-			#game_view .cube .front  { -webkit-transform: rotateY( 180deg ) translateZ( -296px ); }
-			#game_view .cube .back   { -webkit-transform: rotateY(   0deg ) translateZ( -296px ); }
-			#game_view .cube .right  { -webkit-transform: rotateY( -90deg ) translateZ( -296px ); }
-			#game_view .cube .left   { -webkit-transform: rotateY(  90deg ) translateZ( -296px ); }
+			#game_view .cube .south  { -webkit-transform: rotateY( 180deg ) translateZ( -296px ); } /*front*/
+			#game_view .cube .north  { -webkit-transform: rotateY(   0deg ) translateZ( -296px ); } /*back*/
+			#game_view .cube .east   { -webkit-transform: rotateY( -90deg ) translateZ( -296px ); } /*right*/
+			#game_view .cube .west   { -webkit-transform: rotateY(  90deg ) translateZ( -296px ); } /*left*/
 			#game_view .cube .top    { -webkit-transform: rotateX(  90deg ) translateZ(  296px ); }
 			#game_view .cube .bottom { -webkit-transform: rotateX(  90deg ) translateZ(  -90px ); }
 
-/*
-			#game_view .cube.show-front  { -webkit-transform: translateZ( -296px ) rotateY(    0deg ); }
-			#game_view .cube.show-back   { -webkit-transform: translateZ( -296px ) rotateY( -180deg ); }
-			#game_view .cube.show-right  { -webkit-transform: translateZ( -296px ) rotateY(  -90deg ); }
-			#game_view .cube.show-left   { -webkit-transform: translateZ( -296px ) rotateY(   90deg ); }
-			#game_view .cube.show-top    { -webkit-transform: translateZ( -296px ) rotateX(  -90deg ); }
-			#game_view .cube.show-bottom { -webkit-transform: translateZ(  -90px ) rotateX(   90deg ); }
-*/
+
+			#game_view.facing-north .cube { -webkit-transform: translateZ( 0px ) rotateY(    0deg ); } /*show-front*/
+			#game_view.facing-south .cube { -webkit-transform: translateZ( 0px ) rotateY( -180deg ); } /*show-back*/
+			#game_view.facing-west .cube  { -webkit-transform: translateZ( 0px ) rotateY(  -90deg ); } /*show-right*/
+			#game_view.facing-east .cube  { -webkit-transform: translateZ( 0px ) rotateY(   90deg ); } /*show-left*/
+			/*#game_view .cube.show-top    { -webkit-transform: translateZ( 0px ) rotateX(  -90deg ); }*/
+			/*#game_view .cube.show-bottom { -webkit-transform: translateZ( 0px ) rotateX(   90deg ); }*/
+
+			#game_view .slot {
+				width: 592px;
+				height: 386px;
+				margin: -193px -296px;
+				top: 50%;
+				left: 50%;
+				position: absolute;
+				-webkit-transform-style: preserve-3d;
+			}
+
 			#game_view .slot_1_1 {-webkit-transform: translate3d( -1184px, -16px,   300px );}
 			#game_view .slot_1_2 {-webkit-transform: translate3d(  -592px, -16px,   300px );}
 			#game_view .slot_1_3 {-webkit-transform: translate3d(     0px, -16px,   300px );}
@@ -151,34 +170,11 @@
 
 
 		</style>
-		<script>
-			$(function () {
-				var createCube = function (x, y) {
-					return $('\
-						<div class="cube slot_' + y + '_' + x + '">\
-							<div class="side front">FRONT</div>\
-							<div class="side back">BACK</div>\
-							<div class="side left">LEFT</div>\
-							<div class="side right">RIGHT</div>\
-							<div class="side top">TOP</div>\
-							<div class="side bottom">' + y + '_' + x + '</div>\
-						</div>\
-					');
-				};
-
-				var e = $('#game_view');
-				for (var y = 1; y <= 4; y++) {
-					for (var x = 1; x <= 5; x++) {
-						e.append(createCube(x, y));
-					}
-				}
-			});
-		</script>
 	</head>
 
 	<body>
 		<div id="main_view">
-			<div id="game_view">
+			<div id="game_view" class="">
 
 
 			</div>
