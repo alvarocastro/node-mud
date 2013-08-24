@@ -37,6 +37,18 @@ Game.View.prototype = {
 				this.element.append(createCube(x, y));
 			}
 		}
+		/*
+		var transEndEventNames = {
+				'WebkitTransition' : 'webkitTransitionEnd',
+				'MozTransition'    : 'transitionend',
+				'OTransition'      : 'oTransitionEnd',
+				'msTransition'     : 'MSTransitionEnd',
+				'transition'       : 'transitionend'
+			},
+			transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
+
+		this.element.parent().on(transEndEventName, function () {console.log('ando?');}, false);
+		*/
 	},
 
 	clear: function () {
@@ -51,8 +63,9 @@ Game.View.prototype = {
 
 		//this.element.rmClass(/\bshow-\S+/g).addClass('show-' + d);
 
+
 		this.element.addClass('animate');
-		this.element.bind('transitionend', function () {alert('ando?');}, false);
+
 		this.element.rmClass(/\banimation-\S+/g).addClass('animation-' + action);
 		var inst = this;
 		setTimeout(function () {

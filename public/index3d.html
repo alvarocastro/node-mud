@@ -6,7 +6,7 @@
 
 		<link rel="stylesheet" href="./css/game.css" />
 
-		<script src="/js/modernizr.2.6.2.min.js"></script>
+		<script src="/js/modernizr.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		<script src="/js/packer.js"></script>
 		<script src="/js/game.main.js"></script>
@@ -55,13 +55,16 @@
 			/**
 			 * game.view.css
 			 */
+			.debug #game_view { color: #FFF; }
+			.debug #game_view .cube { font-size: 50px; font-family: sans-serif; }
+			.debug #game_view .cube .side { border: 2px solid orange; -webkit-box-sizing: border-box; }
+			.debug #game_view .cube .side.bottom { font-size: 200px; }
+
 			#game_view {
 				z-index: 1;
 
 				width: 736px;
 				height: 480px;
-
-				color: #FFF;
 
 				position: relative;
 				-webkit-transform-style: preserve-3d;
@@ -69,49 +72,33 @@
 
 			#game_view.animate { -webkit-transition: all .5s; }
 
-			#game_view/*.animation-still*/          { -webkit-transform: rotateY(   0deg ) translate3d(    0px, 0px, -300px ); }
-			#game_view.animation-move_forward   { -webkit-transform: rotateY(   0deg ) translate3d(    0px, 0px,  292px ); }
-			#game_view.animation-move_backwards { -webkit-transform: rotateY(   0deg ) translate3d(    0px, 0px, -892px ); }
-			#game_view.animation-move_left      { -webkit-transform: rotateY(   0deg ) translate3d(  592px, 0px, -300px ); }
-			#game_view.animation-move_right     { -webkit-transform: rotateY(   0deg ) translate3d( -592px, 0px, -300px ); }
-			#game_view.animation-turn_left      { -webkit-transform: rotateY( -90deg ) translate3d(    0px, 0px, -300px ); }
-			#game_view.animation-turn_right     { -webkit-transform: rotateY(  90deg ) translate3d(    0px, 0px, -300px ); }
+			#game_view/*.animation-still*/      { -webkit-transform: rotateY(   0deg ) translate3d(    0px, 0px,    0px ); }
+			#game_view.animation-move_forward   { -webkit-transform: rotateY(   0deg ) translate3d(    0px, 0px,  592px ); }
+			#game_view.animation-move_backwards { -webkit-transform: rotateY(   0deg ) translate3d(    0px, 0px, -592px ); }
+			#game_view.animation-move_left      { -webkit-transform: rotateY(   0deg ) translate3d(  592px, 0px,    0px ); }
+			#game_view.animation-move_right     { -webkit-transform: rotateY(   0deg ) translate3d( -592px, 0px,    0px ); }
+			#game_view.animation-turn_left      { -webkit-transform: rotateY( -90deg ) translate3d(  300px, 0px, -300px ); }
+			#game_view.animation-turn_right     { -webkit-transform: rotateY(  90deg ) translate3d( -300px, 0px, -300px ); }
 
-			#game_view .cube {
-				font-size: 50px;
-				font-family: sans-serif;
-				/*
-				width: 592px;
-				height: 386px;
-				margin: -193px -296px;
-				top: 50%;
-				left: 50%;
-				position: absolute;
-				*/
-				-webkit-transform-style: preserve-3d;
-			}
-			#game_view .cube .bottom {
-				font-size: 200px;
-			}
+			#game_view .cube { -webkit-transform-style: preserve-3d; }
 
 			#game_view .cube .side {
 				display: block;
 				position: absolute;
-				border: 2px solid orange;
-
 				-webkit-backface-visibility: hidden;
 			}
+
 			#game_view .cube .north,
 			#game_view .cube .south,
 			#game_view .cube .east,
 			#game_view .cube .west {
-				width: 588px;
-				height: 382px;
+				width: 592px;
+				height: 386px;
 			}
 			#game_view .cube .top,
 			#game_view .cube .bottom {
-				width: 588px;
-				height: 588px;
+				width: 592px;
+				height: 592px;
 			}
 
 			#game_view .cube .south  { -webkit-transform: rotateY( 180deg ) translateZ( -296px ); } /*front*/
@@ -176,7 +163,7 @@
 	</head>
 
 	<body>
-		<div id="main_view">
+		<div id="main_view" class="debug">
 			<div id="game_view" class="">
 
 
