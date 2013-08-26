@@ -53,6 +53,8 @@ Game.prototype = {
 
 	init: function () {
 		this.connector.send();
+
+		this.controls.enable();
 	}
 };
 

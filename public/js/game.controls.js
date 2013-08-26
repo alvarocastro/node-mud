@@ -28,6 +28,8 @@ Game.Controls = function (game) {
 	this.key = key;
 	
 	this.bindings = [];
+
+	this.disabled = true;
 	
 	
 	this.bind(this.moveForward, [key.UP, key.NUMPAD_8]);
@@ -44,6 +46,14 @@ Game.Controls = function (game) {
 };
 
 Game.Controls.prototype = {
+	enable: function () {
+		this.disabled = false;
+	},
+
+	disable: function () {
+		this.disabled = true;
+	},
+
 	bind: function (action, keys) {
 		for (var i in keys) {
 			this.bindings[keys[i]] = action;
@@ -52,7 +62,7 @@ Game.Controls.prototype = {
 
 	keyPress: function (e) {
 		var key = e.keyCode;
-		if (this.bindings[key]) {
+		if (!this.disabled && this.bindings[key]) {
 			this.bindings[key].call(this);
 			e.preventDefault();
 		}

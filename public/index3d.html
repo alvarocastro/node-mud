@@ -58,6 +58,7 @@
 			.debug #game_view { color: #FFF; }
 			.debug #game_view .cube { font-size: 50px; font-family: sans-serif; }
 			.debug #game_view .cube .side { border: 2px solid orange; -webkit-box-sizing: border-box; }
+			.debug #game_view .cube.far .side { border: 2px solid red; }
 			.debug #game_view .cube .side.bottom { font-size: 200px; }
 
 			#game_view {
@@ -150,6 +151,12 @@
 			#game_view .slot_4_4 { -webkit-transform: translate3d(   592px, -16px, -1476px ); }
 			#game_view .slot_4_5 { -webkit-transform: translate3d(  1184px, -16px, -1476px ); }
 
+			#game_view .slot_5_1 { -webkit-transform: translate3d( -1184px, -16px, -2068px ); }
+			#game_view .slot_5_2 { -webkit-transform: translate3d(  -592px, -16px, -2068px ); }
+			#game_view .slot_5_3 { -webkit-transform: translate3d(     0px, -16px, -2068px ); }
+			#game_view .slot_5_4 { -webkit-transform: translate3d(   592px, -16px, -2068px ); }
+			#game_view .slot_5_5 { -webkit-transform: translate3d(  1184px, -16px, -2068px ); }
+
 
 
 			#game_view .cube .side { background-repeat:no-repeat; }
@@ -157,13 +164,20 @@
 
 			#game_view .cube .side.bottom { background-image: url('../base/floor.png'); }
 
-
+			#main_view .limit {
+				width: 400px;
+				height: 300px;
+				color: green;
+				position: absolute;
+				-webkit-transform: translate3d(  1184px, -16px, -2068px ); 
+			}
 
 		</style>
 	</head>
 
 	<body>
-		<div id="main_view" class="debug">
+		<div id="main_view">
+			<div class="limit"></div>
 			<div id="game_view" class="">
 
 

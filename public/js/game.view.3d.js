@@ -17,9 +17,13 @@ Game.View = function (game) {
 Game.View.prototype = {
 	init: function () {
 		var createCube = function (x, y) {
-			return $('\
+			var c, extra = '';
+			if (y < 1 || y > 4 || x < 1 || x > 5) {
+				extra = ' far';
+			}
+			c = $('\
 				<div class="slot slot_' + y + '_' + x + '">\
-					<div class="cube">\
+					<div class="cube' + extra + '">\
 						<div class="side north">FRONT</div>\
 						<div class="side south">BACK</div>\
 						<div class="side east">LEFT</div>\
@@ -29,10 +33,11 @@ Game.View.prototype = {
 					</div>\
 				</div>\
 			');
+			return c;
 		};
 
 		var x, y;
-		for (y = 1; y <= 4; y++) {
+		for (y = 1; y <= 5; y++) {
 			for (x = 1; x <= 5; x++) {
 				this.element.append(createCube(x, y));
 			}
@@ -64,19 +69,25 @@ Game.View.prototype = {
 		//this.element.rmClass(/\bshow-\S+/g).addClass('show-' + d);
 
 
-		this.element.addClass('animate');
+		this.element
+			.addClass('animate')
+			.rmClass(/\banimation-\S+/g)
+			.addClass('animation-' + action);
 
-		this.element.rmClass(/\banimation-\S+/g).addClass('animation-' + action);
 		var inst = this;
+		this.game.controls.disable();
 		setTimeout(function () {
 			inst.clear();
-			inst.element.removeClass('animate');
-			inst.element.rmClass(/\banimation-\S+/g);
+			inst.game.controls.enable();
 
-			inst.element.rmClass(/\bfacing-\S+/g).addClass('facing-' + d);
+			inst.element
+				.removeClass('animate')
+				.rmClass(/\banimation-\S+/g)
+				.rmClass(/\bfacing-\S+/g)
+				.addClass('facing-' + d);
 
 			var i, b, e;
-			for(i in squares) {
+			for (i in squares) {
 				b = squares[i];
 
 				switch (d) {
@@ -94,31 +105,11 @@ Game.View.prototype = {
 						break;
 				}
 
-				if (b.textures.north) {
-					e.find('.north').addClass('texture' + b.textures.north);
-				}
-				if (b.textures.east) {
-					e.find('.east').addClass('texture' + b.textures.east);
-				}
-				if (b.textures.south) {
-					e.find('.south').addClass('texture' + b.textures.south);
-				}
-				if (b.textures.west) {
-					e.find('.west').addClass('texture' + b.textures.west);
-				}
+				if (b.textures.north) { e.find('.north').addClass('texture' + b.textures.north); }
+				if (b.textures.east)  { e.find('.east').addClass('texture' + b.textures.east); }
+				if (b.textures.south) { e.find('.south').addClass('texture' + b.textures.south); }
+				if (b.textures.west)  { e.find('.west').addClass('texture' + b.textures.west); }
 			}
 		}, delay);
-
-		/*
-		var instance = this;
-		this.element.find('.border').each(function () {
-			var pos = $(this).attr('class').substr(14),
-				wall = instance.element.find('.wall.wall_' + pos + '[class*="texture"]');
-
-			if (wall.length) {
-				$(this).addClass(wall.attr('class').substr(-8));
-			}
-		});
-		*/
 	}
 };
