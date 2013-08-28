@@ -9,6 +9,7 @@ var express = require('express')
 console.log('################################################################################' + "\n" +
 	'START: ' + (new Date()).getTime());
 console.log('MONGOHQ', process.env.MONGOHQ_URL);
+
 var app = express();
 
 app.use(express.bodyParser());
@@ -22,7 +23,7 @@ Map.findAll(function (error, data) {
 		Map.cache[map.code] = new Map(map);
 	}
 
-	app.listen(3000);
+	app.listen(process.env.PORT || 3000);
 });
 
 
