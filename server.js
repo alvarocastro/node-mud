@@ -8,7 +8,7 @@ var express = require('express')
 
 console.log('################################################################################' + "\n" +
 	'START: ' + (new Date()).getTime());
-
+console.log('MONGOHQ', process.env.MONGOHQ_URL);
 var app = express();
 
 app.use(express.bodyParser());
