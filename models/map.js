@@ -1,5 +1,5 @@
 var mongojs = require('mongojs'),
-	db = mongojs('mud', ['map']);
+	db = mongojs(process.env.MONGOHQ_URL, ['map']);
 
 
 var Map = function (data) {

@@ -1,5 +1,5 @@
 var mongojs = require('mongojs'),
-	db = mongojs('mud', ['character']);
+	db = mongojs(process.env.MONGOHQ_URL, ['character']);
 
 
 var Character = function (data) {

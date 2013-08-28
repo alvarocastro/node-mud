@@ -1,3 +1,5 @@
+process.env.MONGOHQ_URL = 'mongodb://heroku:1bb3779a781226c71ca32d554df37d16@paulo.mongohq.com:10056/app17451547';
+
 var express = require('express')
 	Map = require('./models/map.js').Map,
 	Square = require('./models/square.js').Square,
