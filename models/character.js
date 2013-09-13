@@ -9,6 +9,12 @@ var Character = function (data) {
 	this.stats = {};
 	this.map = Map.get(data.position.map);
 };
+Character.cache = {};
+
+Character.get = function (name) {
+	return this.cache[name];
+};
+
 Character.create = function (data, callback) {
 	db.character.insert({
 		name: data.name,
@@ -68,9 +74,14 @@ Character.prototype = {
 			};
 
 		switch (move) {
-			case 'forward': this.moveForward(td);break;
+			case 'move_forward': this.moveForward(td);break;
+			case 'move_backwards': this.moveBackwards(td);break;
+			case 'move_left': this.moveLeft(td);break;
+			case 'move_right': this.moveRight(td);break;
+			case 'turn_left': this.turnLeft(td);break;
+			case 'turn_right': this.turnRight(td);break;
 		}
-/*
+
 		var square = this.map.getSquare(od.x, od.y);
 		var targetSquare = this.map.getSquare(td.x, td.y);
 
@@ -78,10 +89,10 @@ Character.prototype = {
 		square.triggerOnLeave(od, td);
 		targetSquare.triggerOnEnter();
 		targetSquare.triggerOnLook();
-*/
+		
 		this.position = td;
 
-		this.save(callback);
+		callback();
 	},
 
 	moveForward: function (td) {
@@ -93,85 +104,49 @@ Character.prototype = {
 		}
 	},
 
-	moveBackwards: function (callback) {
-		var x = this.position.x,
-			y = this.position.y;
-
+	moveBackwards: function (td) {
 		switch (this.position.direction) {
-			case 'north':y++;break;
-			case 'east': x--;break;
-			case 'south':y--;break;
-			case 'west': x++;break;
+			case 'north':td.y++;break;
+			case 'east': td.x--;break;
+			case 'south':td.y--;break;
+			case 'west': td.x++;break;
 		}
-
-		this.position.x = x;
-		this.position.y = y;
-
-		this.save(callback);
 	},
 
-	moveLeft: function (callback) {
-		var x = this.position.x,
-			y = this.position.y;
-
+	moveLeft: function (td) {
 		switch (this.position.direction) {
-			case 'north':x--;break;
-			case 'east': y--;break;
-			case 'south':x++;break;
-			case 'west': y++;break;
+			case 'north':td.x--;break;
+			case 'east': td.y--;break;
+			case 'south':td.x++;break;
+			case 'west': td.y++;break;
 		}
-
-		this.position.x = x;
-		this.position.y = y;
-
-		this.save(callback);
 	},
 
-	moveRight: function (callback) {
-		var x = this.position.x,
-			y = this.position.y;
-
+	moveRight: function (td) {
 		switch (this.position.direction) {
-			case 'north':x++;break;
-			case 'east': y++;break;
-			case 'south':x--;break;
-			case 'west': y--;break;
+			case 'north':td.x++;break;
+			case 'east': td.y++;break;
+			case 'south':td.x--;break;
+			case 'west': td.y--;break;
 		}
-
-		this.position.x = x;
-		this.position.y = y;
-
-		this.save(callback);
 	},
 
-	turnLeft: function (callback) {
-		var direction = this.position.direction;
-
+	turnLeft: function (td) {
 		switch (this.position.direction) {
-			case 'north':direction = 'west';break;
-			case 'east': direction = 'north';break;
-			case 'south':direction = 'east';break;
-			case 'west': direction = 'south';break;
+			case 'north':td.direction = 'west';break;
+			case 'east': td.direction = 'north';break;
+			case 'south':td.direction = 'east';break;
+			case 'west': td.direction = 'south';break;
 		}
-
-		this.position.direction = direction;
-
-		this.save(callback);
 	},
 
-	turnRight: function (callback) {
-		var direction = this.position.direction;
-
+	turnRight: function (td) {
 		switch (this.position.direction) {
-			case 'north':direction = 'east';break;
-			case 'east': direction = 'south';break;
-			case 'south':direction = 'west';break;
-			case 'west': direction = 'north';break;
+			case 'north':td.direction = 'east';break;
+			case 'east': td.direction = 'south';break;
+			case 'south':td.direction = 'west';break;
+			case 'west': td.direction = 'north';break;
 		}
-
-		this.position.direction = direction;
-
-		this.save(callback);
 	},
 
 	getFov: function () {

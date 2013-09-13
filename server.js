@@ -1,4 +1,5 @@
-process.env.MONGOHQ_URL = 'mongodb://heroku:1bb3779a781226c71ca32d554df37d16@paulo.mongohq.com:10056/app17451547';
+//process.env.MONGOHQ_URL = 'mongodb://heroku:1bb3779a781226c71ca32d554df37d16@paulo.mongohq.com:10056/app17451547';
+process.env.MONGOHQ_URL = 'mud';
 
 var express = require('express')
 	Map = require('./models/map.js').Map,
@@ -8,7 +9,6 @@ var express = require('express')
 
 console.log('################################################################################' + "\n" +
 	'START: ' + (new Date()).getTime());
-console.log('MONGOHQ', process.env.MONGOHQ_URL);
 
 var app = express();
 
@@ -23,9 +23,15 @@ Map.findAll(function (error, data) {
 		Map.cache[map.code] = new Map(map);
 	}
 
-	app.listen(process.env.PORT || 3000);
-});
+	Character.findAll(function (error, data) {
+		for (var i = 0, ch; ch = data[i]; i++) {
+			Character.cache[ch.name] = new Character(ch);
+		}
 
+		console.log('DONE');
+		app.listen(process.env.PORT || 3000);
+	});
+});
 
 /*
 Character.create({name: 'Moltar'}, function (error, data) {
@@ -55,50 +61,32 @@ var cid = '520454659cad8f5f39000001';
 
 app.get('/game', function (req, res) {
 	console.log('# REQUEST: ' + (new Date()).getTime());
-	Character.findOneById(cid, function (error, data) {
-		var c = new Character(data),
-			action = req.query.action;
+	var c = Character.get('Moltar'),
+		action = req.query.action;
 
-		var cb = function () {
-			res.send({
-				error: error,
-				character: Packer.pack(c.position, 'character'),
-				fov: Packer.pack(c.getFov(), 'fov')
-			});
-		};
+	var cb = function () {
+		res.send({
+			character: Packer.pack(c.position, 'character'),
+			fov: Packer.pack(c.getFov(), 'fov')
+		});
+	};
 
 
-		switch (action) {
-			case 'move_forward':
-				console.log('- ACTION: move_forward');
-				c.move('forward', cb);
-				break;
-			case 'move_backwards':
-				console.log('- ACTION: move_backwards');
-				c.moveBackwards(cb);
-				break;
-			case 'move_left':
-				console.log('- ACTION: move_left');
-				c.moveLeft(cb);
-				break;
-			case 'move_right':
-				console.log('- ACTION: move_right');
-				c.moveRight(cb);
-				break;
-			case 'turn_left':
-				console.log('- ACTION: turn_left');
-				c.turnLeft(cb);
-				break;
-			case 'turn_right':
-				console.log('- ACTION: turn_right');
-				c.turnRight(cb);
-				break;
-			default:
-				console.log('- ACTION: DEFAULT');
-				cb();
-				break;
-		}
-	});
+	switch (action) {
+		case 'move_forward':
+		case 'move_backwards':
+		case 'move_left':
+		case 'move_right':
+		case 'turn_left':
+		case 'turn_right':
+			console.log('- ACTION: ' + action);
+			c.move(action, cb);
+			break;
+		default:
+			console.log('- ACTION: DEFAULT');
+			cb();
+			break;
+	}
 });
 
 
