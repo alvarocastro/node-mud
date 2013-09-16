@@ -60,74 +60,93 @@ Character.prototype = {
 	},
 
 	move: function (move, callback) {
-		var od = {
+		var from = {
 				x: this.position.x,
 				y: this.position.y,
 				direction: this.position.direction,
 				map: this.position.map,
 			},
-			td = {
+			to = {
 				x: this.position.x,
 				y: this.position.y,
 				direction: this.position.direction,
 				map: this.position.map,
-			};
+			},
+			dir;
 
 		switch (move) {
-			case 'move_forward': this.moveForward(td);break;
-			case 'move_backwards': this.moveBackwards(td);break;
-			case 'move_left': this.moveLeft(td);break;
-			case 'move_right': this.moveRight(td);break;
-			case 'turn_left': this.turnLeft(td);break;
-			case 'turn_right': this.turnRight(td);break;
+			case 'move_forward': dir = this.moveForward(to);break;
+			case 'move_backwards': dir = this.moveBackwards(to);break;
+			case 'move_left': dir = this.moveLeft(to);break;
+			case 'move_right': dir = this.moveRight(to);break;
+			case 'turn_left': dir = this.turnLeft(to);break;
+			case 'turn_right': dir = this.turnRight(to);break;
 		}
 
-		var square = this.map.getSquare(od.x, od.y);
-		var targetSquare = this.map.getSquare(td.x, td.y);
+
+		var doMove = true,
+			square = this.map.getSquare(from.x, from.y);
+
+		switch (move) {
+			case 'move_forward':
+			case 'move_backwards':
+			case 'move_left':
+			case 'move_right':
+				var targetSquare = this.map.getSquare(to.x, to.y);
+				doMove = square.triggerOnLeave(this, from, to, dir);
+				targetSquare.triggerOnEnter(this, from, to);
+				targetSquare.triggerOnLook(this, from, to);
+
+				break;
+			case 'turn_left':
+			case 'turn_right':
+				square.triggerOnLook(this, from, to);
+
+				break;
+		}
 
 
-		square.triggerOnLeave(od, td);
-		targetSquare.triggerOnEnter();
-		targetSquare.triggerOnLook();
-		
-		this.position = td;
+
+		if (doMove) {
+			this.position = to;
+		}
 
 		callback();
 	},
 
 	moveForward: function (td) {
 		switch (this.position.direction) {
-			case 'north':td.y--;break;
-			case 'east': td.x++;break;
-			case 'south':td.y++;break;
-			case 'west': td.x--;break;
+			case 'north':td.y--; return 'north';
+			case 'east': td.x++; return 'east';
+			case 'south':td.y++; return 'south';
+			case 'west': td.x--; return 'west';
 		}
 	},
 
 	moveBackwards: function (td) {
 		switch (this.position.direction) {
-			case 'north':td.y++;break;
-			case 'east': td.x--;break;
-			case 'south':td.y--;break;
-			case 'west': td.x++;break;
+			case 'north':td.y++; return 'south';
+			case 'east': td.x--; return 'west';
+			case 'south':td.y--; return 'north';
+			case 'west': td.x++; return 'east';
 		}
 	},
 
 	moveLeft: function (td) {
 		switch (this.position.direction) {
-			case 'north':td.x--;break;
-			case 'east': td.y--;break;
-			case 'south':td.x++;break;
-			case 'west': td.y++;break;
+			case 'north':td.x--; return 'west';
+			case 'east': td.y--; return 'north';
+			case 'south':td.x++; return 'east';
+			case 'west': td.y++; return 'south';
 		}
 	},
 
 	moveRight: function (td) {
 		switch (this.position.direction) {
-			case 'north':td.x++;break;
-			case 'east': td.y++;break;
-			case 'south':td.x--;break;
-			case 'west': td.y--;break;
+			case 'north':td.x++; return 'east';
+			case 'east': td.y++; return 'south';
+			case 'south':td.x--; return 'west';
+			case 'west': td.y--; return 'north';
 		}
 	},
 

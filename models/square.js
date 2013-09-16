@@ -17,8 +17,14 @@ Square.prototype = {
 	},
 
 	//square
-	triggerOnLeave: function () {
+	triggerOnLeave: function (c, op, tp, dir) {
 		console.log('- EVENT: onLeave(x:' + this.x + '|y:' + this.y + ')');
+
+		if (this.textures[dir]) {
+			return false;
+		}
+
+		return true;
 	},
 
 	//wall
