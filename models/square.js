@@ -3,6 +3,7 @@ var Square = function (data) {
 	this.y = data.y;
 	this.textures = data.textures;
 	this.events = data.events;
+	//console.log(data.events);
 };
 
 Square.prototype = {
@@ -20,7 +21,7 @@ Square.prototype = {
 	triggerOnLeave: function (c, op, tp, dir) {
 		console.log('- EVENT: onLeave(x:' + this.x + '|y:' + this.y + ')');
 
-		if (this.textures[dir]) {
+		if (this.events[dir]) {
 			return false;
 		}
 

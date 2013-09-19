@@ -88,6 +88,7 @@ Map.prototype = {
 			url = '/data/map';
 		}
 
+console.log(this.toJSON());
 		$.post(url, this.toJSON())
 			.success(success)
 			.error(error);

@@ -3,41 +3,64 @@
 	<head>
 		<title>Map - Create</title>
 		<style>
+			* { margin: 0; padding: 0; font-family: sans-serif; }
+
 			.map {
+				float: left;
 				position:relative;
-				border-bottom: 1px solid black;
-				border-right: 1px solid black;
-				width: 528px;
-				height: 528px;
-				background: #AA7744;
+				border: 1px solid black;
+				width: 512px;
+				height: 512px;
+				background: #A74;
 			}
 
 			.map .square {
 				position: absolute;
-				border-top: 1px solid black;
-				border-left: 1px solid black;
+				box-sizing: border-box;
 				height: 32px;
 				width: 32px;
+				border: 1px solid #753;
 				color: white;
 				font-family: arial;
 				font-size: 10px;
 				text-align: center;
 			}
 
-			.map .square .wall {position: absolute;}
-			.map .square .wall:hover {border: 1px solid #00FFFF;}
-			.map .square .wall:hover.north,
-			.map .square .wall:hover.south {width: 30px; height: 4px;}
+			.map .square .wall {
+				position: absolute;
+				box-sizing: border-box;
+			}
+			.map .square .wall:hover { border: 1px solid #0FF; }
 
-			.map .square .wall:hover.east,
-			.map .square .wall:hover.west {width: 4px; height: 30px;}
+			.map .square .wall.north { top:    0; left:  0; width: 100%; height: 30%; }
+			.map .square .wall.east  { top:    0; right: 0; width: 30%;  height: 100%; }
+			.map .square .wall.south { bottom: 0; left:  0; width: 100%; height: 30%; }
+			.map .square .wall.west  { top:    0; left:  0; width: 30%;  height: 100%; }
 
-			.map .square .wall.north {top: 0; left: 0; width: 32px; height: 6px;}
-			.map .square .wall.east {top: 0; right: 0; width: 6px; height: 32px;}
-			.map .square .wall.south {bottom: 0; left: 0; width: 32px; height: 6px;}
-			.map .square .wall.west {top: 0; left: 0; width: 6px; height: 32px;}
+			.map .square .wall.selected { outline: 2px solid #0F0; z-index: 9; }
+			.map .square .wall.texture { background: #000; }
 
-			.map .square .wall.texture {background: #000;}
+			.mock {
+				display: none;
+			}
+
+			#element {
+				border: 1px solid black;
+				float: left;
+				width: 250px;
+				height: 512px;
+			}
+			#element .events ul {
+				background: #CCC;
+				margin-bottom: 20px;
+			}
+			#element .events ul li {
+				border-bottom: 1px solid black;
+			}
+			#element .events .add-form form {
+				border-top: 1px solid black;
+				padding: 5px 0;
+			}
 		</style>
 	</head>
 	<body>
@@ -47,19 +70,45 @@
 		<div>
 			<input id="map_id" />
 			<input id="map_load" type="button" />
+			<button type="button" id="save">El barba sabeee</button>
 		</div>
 		<div class="map" id="map"></div>
-
+		<div class="element" id="element">
+			<div class="name"></div>
+			<div class="events">
+				<p>Events</p>
+				<ul>
+					<li class="mock">
+						<p>
+							<button type="button" class="up">&lt;</button><button type="button" class="down">&gt;</button>
+							<span class="type"></span> <button type="button" class="remove">x</button>
+						</p>
+						<p class="value"></p>
+					</li>
+				</ul>
+				<div class="add-form">
+					<form class="block-movement">
+						<div>Block movement <button type="button">Add</button></div>
+					</form>
+					<form class="show-text">
+						<div>Show text <button type="button">Add</button></div>
+						<input name="text" data-key="text" />
+					</form>
+				</div>
+			</div>
+		</div>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.2.3/json3.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		<script src="/js/create.model.Map.js"></script>
 		<script src="/js/create.model.MapSquare.js"></script>
 		<script>
 			var MAP,
-				$map;
+				$map,
+				$element;
 
 			$(function () {
 				$map = $('#map');
+				$element = $('#element');
 
 				$map.on('click', '.wall', function () {
 					var $wall = $(this),
@@ -67,11 +116,59 @@
 						x = $square.attr('class').replace(/.*x([0-9]+).*/i, '$1'),
 						y = $square.attr('class').replace(/.*y([0-9]+).*/i, '$1'),
 						square = MAP.getSquare(x, y),
-						side = $wall.attr('class').replace(/wall|texture|\s*/ig, '');
+						side = $wall.attr('class').match(/north|east|south|west|floor/i).pop();
+console.log(square);
+					$element
+						.data('x', x)
+						.data('y', y)
+						.data('side', side)
+						.data('square', square);
+					$element.find('.name').text('x: ' + x + ' | y: ' + y + ' | ' + side);
 
+					$element.find('.events');
+/*
 					var v = $wall.hasClass('texture');
 					square.textures[side] = v ? 0 : 1;
-					$wall.toggleClass('texture');
+*/
+					$wall.parents('#map').find('.selected').removeClass('selected');
+					$wall.toggleClass('selected');
+
+
+				});
+
+				$element.on('click', 'form button', function () {
+					var $form = $(this).closest('form'),
+						$events = $element.find('.events ul'),
+						$event = $events.find('li.mock').clone().removeClass('mock'),
+						value = {};
+
+					$form.find('input').each(function () {
+						value[$(this).data('key')] = $(this).val();
+					});
+					//if ($element.data('square').events[$element.data('side')]
+
+					$event.find('.type').text($form.attr('class'));
+					$event.find('.value').text(JSON.stringify(value));
+
+					$events.append($event);
+				});
+
+				$element.on('click', '.events .remove', function () {
+					$(this).closest('li').remove();
+				});
+
+				$element.on('click', '.events .up', function () {
+					var $this = $(this).closest('li');
+					$this.after($this.prev(':not(.mock)'));
+				});
+
+				$element.on('click', '.events .down', function () {
+					var $this = $(this).closest('li');
+					$this.before($this.next(':not(.mock)'));
+				});
+
+				$('#save').on('click', function () {
+					MAP.save();
 				})
 
 				Map.findAll(function (data) {

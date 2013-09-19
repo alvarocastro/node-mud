@@ -8,14 +8,14 @@ var MapSquare = function (data) {
 		west: data.textures.west,
 		floor: data.textures.floor
 	};
-	this.events = data.events;
+	this.events = { north: [], east: [], south: [], west: [], floor: [] };
 };
 MapSquare.create = function (x, y) {
 	return new MapSquare({
 		x: x,
 		y: y,
 		textures: { north: 0, east: 0, south: 0, west: 0, floor: 0 },
-		events: { north: null, east: null, south: null, west: null, floor: null }
+		events: { north: [], east: [], south: [], west: [], floor: [] }
 	});
 };
 
