@@ -136,6 +136,19 @@ console.log(square);
 
 				});
 
+				function getEvents ($events) {
+					var $event,
+						events = [];
+					$events.find('li:not(.mock)').each(function () {
+						$event = $(this);
+						events.push({
+							type: $event.find('.type').text(),
+							data: JSON.parse($event.find('.value').text())
+						});
+					});
+					return events;
+				}
+
 				$element.on('click', 'form button', function () {
 					var $form = $(this).closest('form'),
 						$events = $element.find('.events ul'),
@@ -145,12 +158,14 @@ console.log(square);
 					$form.find('input').each(function () {
 						value[$(this).data('key')] = $(this).val();
 					});
-					//if ($element.data('square').events[$element.data('side')]
+
 
 					$event.find('.type').text($form.attr('class'));
 					$event.find('.value').text(JSON.stringify(value));
 
 					$events.append($event);
+
+					console.log(getEvents($events));
 				});
 
 				$element.on('click', '.events .remove', function () {

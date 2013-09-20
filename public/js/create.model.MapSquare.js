@@ -8,7 +8,7 @@ var MapSquare = function (data) {
 		west: data.textures.west,
 		floor: data.textures.floor
 	};
-	this.events = { north: [], east: [], south: [], west: [], floor: [] };
+	this.events = data.events || {};
 };
 MapSquare.create = function (x, y) {
 	return new MapSquare({
@@ -24,8 +24,8 @@ MapSquare.prototype = {
 		return {
 			x: this.x,
 			y: this.y,
-			textures: this.textures,
-			events: this.events
+			//textures: this.textures,
+			dumb: this.events
 		};
 	}
 };

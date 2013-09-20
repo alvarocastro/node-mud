@@ -116,7 +116,6 @@ app.get('/data/map', function (req, res) {
 });
 
 app.post('/data/map/:id', function (req, res) {
-	console.log(req.body);
 	var map = new Map(req.body);
 	map.save(function (error, data) {
 		res.send({
