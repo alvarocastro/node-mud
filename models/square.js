@@ -19,22 +19,18 @@ Square.prototype = {
 	//square
 	triggerOnLeave: function (c, op, tp, dir) {
 		console.log('- EVENT: onLeave(x:' + this.x + '|y:' + this.y + ')');
-
-		if (this.events[dir]) {
-			return false;
-		}
-
-		return true;
 	},
 
 	//wall
 	triggerOnLook: function () {
 		console.log('- EVENT: onLook(x:' + this.x + '|y:' + this.y + ')');
+		//return this.executeEvents(this.events[dir]);
 	},
 
 	//wall
-	triggerOnWalk: function () {
+	triggerOnWalk: function (c, op, tp, dir) {
 		console.log('- EVENT: onWalk(x:' + this.x + '|y:' + this.y + ')');
+		return this.executeEvents(this.events[dir]['on_walk']);
 	},
 
 	//wall|square
@@ -43,16 +39,24 @@ Square.prototype = {
 	},
 
 	executeEvents: function (events) {
+		if (!events) {
+			return true;
+		}
 		for (var i = 0, event; event = events[i]; i++) {
 			switch (event.type) {
+				case 'block-movement':
+					console.log('- EVENT EXECUTE: block-movement');
+					return false;
+					break;
 				case 'log':
-					console.log('- EVENT EXECUTE: Ohai');
+					console.log('- EVENT EXECUTE: log');
 					break;
 				default:
 					console.log('- EVENT EXECUTE: DEFAULT');
 					break;
 			}
 		}
+		return true;
 	},
 
 	toJSON: function () {

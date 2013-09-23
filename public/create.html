@@ -165,7 +165,11 @@ console.log(square);
 
 					$events.append($event);
 
-					console.log(getEvents($events));
+					var square = $element.data('square'),
+						side = $element.data('side');
+					square.events[side]['on_walk'] = getEvents($events);
+
+					console.log(square.events[side]['on_walk']);
 				});
 
 				$element.on('click', '.events .remove', function () {

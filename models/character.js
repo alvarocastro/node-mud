@@ -93,14 +93,15 @@ Character.prototype = {
 			case 'move_left':
 			case 'move_right':
 				var targetSquare = this.map.getSquare(to.x, to.y);
-				doMove = square.triggerOnLeave(this, from, to, dir);
-				targetSquare.triggerOnEnter(this, from, to);
-				targetSquare.triggerOnLook(this, from, to);
+				doMove = square.triggerOnWalk(this, from, to, dir);
+				//doMove = square.triggerOnLeave(this, from, to, dir);
+				//targetSquare.triggerOnEnter(this, from, to);
+				//targetSquare.triggerOnLook(this, from, to);
 
 				break;
 			case 'turn_left':
 			case 'turn_right':
-				square.triggerOnLook(this, from, to);
+				//square.triggerOnLook(this, from, to);
 
 				break;
 		}

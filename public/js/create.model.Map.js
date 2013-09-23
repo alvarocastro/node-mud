@@ -88,17 +88,11 @@ Map.prototype = {
 			url = '/data/map';
 		}
 
-		var d = this.toJSON();
-		/*d = {
-			yo: 1,
-			squares: {
-				'0_0': {
-					events: [1,2,3,4]
-				}
-			}
-		};
-		console.log(d);*/
-		$.post(url, d)
+		$.ajax(url, {
+			data: JSON.stringify(this.toJSON()),
+			contentType: 'application/json',
+			type: 'post'
+		})
 			.success(success)
 			.error(error);
 	},
