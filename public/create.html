@@ -125,7 +125,7 @@ console.log(square);
 						.data('square', square);
 					$element.find('.name').text('x: ' + x + ' | y: ' + y + ' | ' + side);
 
-					$element.find('.events');
+					$element.find('.events ul li:not(.mock)').remove();
 /*
 					var v = $wall.hasClass('texture');
 					square.textures[side] = v ? 0 : 1;

@@ -23,7 +23,14 @@ Game.Controls = function (game) {
 		NUMPAD_6: 102,
 		NUMPAD_7: 103,
 		NUMPAD_8: 104,
-		NUMPAD_9: 105
+		NUMPAD_9: 105,
+
+		Q: 81,
+		W: 87,
+		E: 69,
+		A: 65,
+		S: 83,
+		D: 68
 	};
 	this.key = key;
 	
@@ -32,12 +39,12 @@ Game.Controls = function (game) {
 	this.disabled = true;
 	
 	
-	this.bind(this.moveForward, [key.UP, key.NUMPAD_8]);
-	this.bind(this.moveBackwards, [key.DOWN, key.NUMPAD_2]);
-	this.bind(this.moveLeft, [key.LEFT, key.NUMPAD_4]);
-	this.bind(this.moveRight, [key.RIGHT, key.NUMPAD_6]);
-	this.bind(this.turnLeft, [key.NUMPAD_7, key.NUMPAD_1]);
-	this.bind(this.turnRight, [key.NUMPAD_9, key.NUMPAD_3]);
+	this.bind(this.moveForward, [key.W, key.UP, key.NUMPAD_8]);
+	this.bind(this.moveBackwards, [key.S, key.DOWN, key.NUMPAD_2]);
+	this.bind(this.moveLeft, [key.A, key.LEFT, key.NUMPAD_4]);
+	this.bind(this.moveRight, [key.D, key.RIGHT, key.NUMPAD_6]);
+	this.bind(this.turnLeft, [key.Q, key.NUMPAD_7, key.NUMPAD_1]);
+	this.bind(this.turnRight, [key.E, key.NUMPAD_9, key.NUMPAD_3]);
 	
 	var instance = this;
 	$(document).bind('keydown', function (e) {

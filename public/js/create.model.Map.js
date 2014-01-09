@@ -38,14 +38,6 @@ Map.prototype = {
 
 	getSquare: function (x, y) {
 		return this.squares[x + '_' + y];
-
-		/*
-		for (var s, i = 0, c = this.squares.length; s = this.squares[i]; i++) {
-			if (s.x == x && s.y == y) {
-				return s;
-			}
-		}
-		*/
 	},
 
 	load: function (callback) {
