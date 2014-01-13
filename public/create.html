@@ -38,10 +38,24 @@
 			.map .square .wall.west  { top:    0; left:  0; width: 30%;  height: 100%; }
 
 			.map .square .wall.selected { outline: 2px solid #0F0; z-index: 9; }
-			.map .square .wall.texture { background: #000; }
+			.map .square .wall[class*=' texture-'],
+			.map .square .wall[class^='texture-'] {
+				background: #555;
+			}
+			.map .square .wall.texture-1 { background: #000; }
 
 			.mock {
 				display: none;
+			}
+
+
+			.btn {
+				padding: 1px 5px;
+				cursor: pointer;
+				background: #BBB;
+			}
+			.btn:hover {
+				background: #DDD;
 			}
 
 			#element {
@@ -53,9 +67,33 @@
 			#element .events ul {
 				background: #CCC;
 				margin-bottom: 20px;
+				list-style: none;
 			}
 			#element .events ul li {
 				border-bottom: 1px solid black;
+				position: relative;
+			}
+			#element .events ul li .controls {
+				position: absolute;
+				top: 0;
+				right: 0;
+			}
+			#element .events ul li .controls a {
+				display: block;
+				float: left;
+				margin-left: 1px;
+				width: 20px;
+				height: 20px;
+				background: #BBB;
+				text-decoration: none;
+				text-align: center;
+			}
+			#element .events ul li .controls a:hover {
+				background: #DDD;
+			}
+			#element .events ul li:first-child .controls a.up,
+			#element .events ul li:last-child .controls a.down {
+				display: none;
 			}
 			#element .events .add-form form {
 				border-top: 1px solid black;
@@ -70,7 +108,7 @@
 		<div>
 			<input id="map_id" />
 			<input id="map_load" type="button" />
-			<button type="button" id="save">El barba sabeee</button>
+			<button type="button" id="save">El barba SAVEeee</button>
 		</div>
 		<div class="map" id="map"></div>
 		<div class="element" id="element">
@@ -79,28 +117,35 @@
 				<p>Events</p>
 				<ul>
 					<li class="mock">
-						<p>
-							<button type="button" class="up">&lt;</button><button type="button" class="down">&gt;</button>
-							<span class="type"></span> <button type="button" class="remove">x</button>
-						</p>
+						<div class="controls">
+							<a href="#" class="up" title="Move up">&uarr;</a>
+							<a href="#" class="down" title="Move down">&darr;</a>
+							<a href="#" class="remove" title="Remove">&times;</a>
+						</div>
+						<p class="type"></p> 
 						<p class="value"></p>
 					</li>
 				</ul>
 				<div class="add-form">
 					<form class="block-movement">
-						<div>Block movement <button type="button">Add</button></div>
+						<div>Block movement <span class="btn add">Add</span></div>
 					</form>
 					<form class="show-text">
-						<div>Show text <button type="button">Add</button></div>
+						<div>Show text <span class="btn add">Add</span></div>
 						<input name="text" data-key="text" />
 					</form>
 				</div>
+				<div>
+					<span class="btn save">Save</span>
+				</div>
 			</div>
 		</div>
+
 		<script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.2.3/json3.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		<script src="/js/create.model.Map.js"></script>
 		<script src="/js/create.model.MapSquare.js"></script>
+		<script src="/js/create.main.js"></script>
 		<script>
 			var MAP,
 				$map,
@@ -110,81 +155,6 @@
 				$map = $('#map');
 				$element = $('#element');
 
-				$map.on('click', '.wall', function () {
-					var $wall = $(this),
-						$square = $wall.parent('.square'),
-						x = $square.attr('class').replace(/.*x([0-9]+).*/i, '$1'),
-						y = $square.attr('class').replace(/.*y([0-9]+).*/i, '$1'),
-						square = MAP.getSquare(x, y),
-						side = $wall.attr('class').match(/north|east|south|west|floor/i).pop();
-console.log(square);
-					$element
-						.data('x', x)
-						.data('y', y)
-						.data('side', side)
-						.data('square', square);
-					$element.find('.name').text('x: ' + x + ' | y: ' + y + ' | ' + side);
-
-					$element.find('.events ul li:not(.mock)').remove();
-/*
-					var v = $wall.hasClass('texture');
-					square.textures[side] = v ? 0 : 1;
-*/
-					$wall.parents('#map').find('.selected').removeClass('selected');
-					$wall.toggleClass('selected');
-
-
-				});
-
-				function getEvents ($events) {
-					var $event,
-						events = [];
-					$events.find('li:not(.mock)').each(function () {
-						$event = $(this);
-						events.push({
-							type: $event.find('.type').text(),
-							data: JSON.parse($event.find('.value').text())
-						});
-					});
-					return events;
-				}
-
-				$element.on('click', 'form button', function () {
-					var $form = $(this).closest('form'),
-						$events = $element.find('.events ul'),
-						$event = $events.find('li.mock').clone().removeClass('mock'),
-						value = {};
-
-					$form.find('input').each(function () {
-						value[$(this).data('key')] = $(this).val();
-					});
-
-
-					$event.find('.type').text($form.attr('class'));
-					$event.find('.value').text(JSON.stringify(value));
-
-					$events.append($event);
-
-					var square = $element.data('square'),
-						side = $element.data('side');
-					square.events[side]['on_walk'] = getEvents($events);
-
-					console.log(square.events[side]['on_walk']);
-				});
-
-				$element.on('click', '.events .remove', function () {
-					$(this).closest('li').remove();
-				});
-
-				$element.on('click', '.events .up', function () {
-					var $this = $(this).closest('li');
-					$this.after($this.prev(':not(.mock)'));
-				});
-
-				$element.on('click', '.events .down', function () {
-					var $this = $(this).closest('li');
-					$this.before($this.next(':not(.mock)'));
-				});
 
 				$('#save').on('click', function () {
 					MAP.save();
@@ -219,7 +189,6 @@ console.log(square);
 				//console.log(MAP.toJSON());
 
 				//MAP.save();
-
 			});
 
 			var initMap = function () {
@@ -248,7 +217,7 @@ console.log(square);
 						square = map.getSquare(x, y);
 						$square = $map.find('.square.x' + x + 'y' + y);
 						for (var i = 0, side; side = sides[i]; i++) {
-							$square.find('.wall.' + side).addClass(parseInt(square.textures[side]) == 1 ? 'texture' : '');
+							$square.find('.wall.' + side).addClass(parseInt(square.textures[side]) == 1 ? 'texture-' + square.textures[side] : '');
 						}
 					}
 				}
