@@ -10,32 +10,22 @@
 
 #chat_log .message {
 	position: relative;
-	border-top: 1px dotted black;
+	border-bottom: 1px dotted black;
 }
-#chat_log .message.normal {
-	border-top: 1px dotted black;
+#chat_log .message:last-child {
+	border-bottom: none;
 }
-#chat_log .message.info {
-	background: #8CF;
-}
-#chat_log .message.warning {
-	background: #FF6;
-}
-#chat_log .message.error {
-	background: #F66;
-}
+#chat_log .message p {
 
-#chat_log .message .info {
+}
+#chat_log .message .time {
+	display: none;
 	position: absolute;
 	top: 0;
 	right: 0;
-	background: url('../images/chatlog/info-bg.png');
-	font-size: 12px;
-	display: none;
-	-webkit-border-bottom-left-radius: 5px;
-	-moz-border-radius-bottomleft: 5px;
-	border-bottom-left-radius: 5px;
+	background: #AAA;
+	font-size: 10px;
 }
-#chat_log .message:hover .info {
+#chat_log .message:hover .time {
 	display: block;
 }

@@ -13,6 +13,7 @@ var Game = function (config) {
 	}
 
 
+	this.chatlog = new Game.ChatLog(this);
 	this.connector = new Game.Connector(this);
 	this.controls = new Game.Controls(this);
 	this.view = new Game.View(this);

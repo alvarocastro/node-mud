@@ -18,15 +18,16 @@ Game.Connector.prototype = {
 		var instance = this;
 		$.getJSON(this.endpoint, params, function (data) {
 			var character = data.character ? Packer.unpack(data.character, 'character') : null,
-				fov = data.fov ? Packer.unpack(data.fov, 'fov') : null;
+				fov = data.fov ? Packer.unpack(data.fov, 'fov') : null,
+				chat = data.chat ? Packer.unpack(data.chat, 'chat') : null;
 
 			if (character && fov) {
 				console.log(character.x, character.y, character.direction);
 				instance.game.view.render(character, fov, action);
 			}
 
-			if (data.chat && data.chat.length) {
-				//Game.ChatLog.addMessages(data.chat);
+			if (chat) {
+				instance.game.chatlog.addMessages(chat);
 			}
 		});
 	}

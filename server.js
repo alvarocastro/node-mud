@@ -5,6 +5,7 @@ var express = require('express')
 	Map = require('./models/map.js').Map,
 	Square = require('./models/square.js').Square,
 	Character = require('./models/character.js').Character,
+	ChatLog = require('./models/chatlog.js').ChatLog,
 	Packer = require('./public/js/packer.js');
 
 console.log('################################################################################' + "\n" +
@@ -67,6 +68,7 @@ app.get('/game', function (req, res) {
 	var cb = function () {
 		res.send({
 			character: Packer.pack(c.position, 'character'),
+			chat: Packer.pack(c.chatLog.getMessages(), 'chat'),
 			fov: Packer.pack(c.getFov(), 'fov')
 		});
 	};

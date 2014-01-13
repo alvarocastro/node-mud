@@ -24,13 +24,13 @@ Square.prototype = {
 	//wall
 	triggerOnLook: function () {
 		console.log('- EVENT: onLook(x:' + this.x + '|y:' + this.y + ')');
-		//return this.executeEvents(this.events[dir]);
+		return this.executeEvents(this.events[dir], c);
 	},
 
 	//wall
 	triggerOnWalk: function (c, op, tp, dir) {
 		console.log('- EVENT: onWalk(x:' + this.x + '|y:' + this.y + ')');
-		return this.executeEvents(this.events[dir]['on_walk']);
+		return this.executeEvents(this.events[dir]['on_walk'], c);
 	},
 
 	//wall|square
@@ -38,7 +38,7 @@ Square.prototype = {
 		console.log('- EVENT: onItemUse(x:' + this.x + '|y:' + this.y + ')');
 	},
 
-	executeEvents: function (events) {
+	executeEvents: function (events, c) {
 		if (!events) {
 			return true;
 		}
@@ -47,6 +47,10 @@ Square.prototype = {
 				case 'block-movement':
 					console.log('- EVENT EXECUTE: block-movement');
 					return false;
+					break;
+				case 'show-text':
+					console.log('- EVENT EXECUTE: show-text');
+					c.chatLog.push(event.data.text, event.data.type);
 					break;
 				case 'log':
 					console.log('- EVENT EXECUTE: log');

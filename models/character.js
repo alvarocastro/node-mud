@@ -8,6 +8,8 @@ var Character = function (data) {
 	this.position = data.position;
 	this.stats = {};
 	this.map = Map.get(data.position.map);
+
+	this.chatLog = new ChatLog();
 };
 Character.cache = {};
 

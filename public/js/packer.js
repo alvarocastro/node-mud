@@ -1,10 +1,11 @@
 (function (exports) {
 	exports.pack = function (data, type) {
-		var result = [];
 		switch (type) {
 			case 'fov':
-				var square;
-				for (var i in data) {
+				var i,
+					square,
+					result = [];
+				for (i in data) {
 					square = data[i];
 					result.push([
 						square.x,
@@ -25,6 +26,22 @@
 					data.y,
 					data.direction
 				];
+				break;
+
+			case 'chat':
+				var i,
+					message,
+					result = [];
+				for (i in data) {
+					message = data[i];
+					result.push([
+						message.time,
+						message.text,
+						message.type,
+					]);
+				}
+
+				return result;
 				break;
 
 			default:
@@ -59,6 +76,19 @@
 					y: data[1],
 					direction: data[2],
 				};
+				break;
+
+			case 'chat':
+				var result = [];
+				for (var i = 0, message; message = data[i]; i++) {
+					result.push({
+						time: message[0],
+						text: message[1],
+						type: message[2],
+					})
+				}
+
+				return result;
 				break;
 
 			default:
