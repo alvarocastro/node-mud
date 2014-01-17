@@ -64,7 +64,7 @@ Game.View.prototype = {
 		var x = character.x,
 			y = character.y,
 			d = character.direction,
-			delay = action ? 550 : 0;
+			delay = action ? 250 : 0;
 
 		//this.element.rmClass(/\bshow-\S+/g).addClass('show-' + d);
 
