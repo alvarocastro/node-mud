@@ -22,6 +22,7 @@ Game.Connector.prototype = {
 				chat = data.chat ? Packer.unpack(data.chat, 'chat') : null;
 
 			if (character && fov) {
+				//console.table(fov);
 				console.log(character.x, character.y, character.direction);
 				instance.game.view.render(character, fov, action);
 			}

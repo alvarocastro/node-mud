@@ -74,7 +74,7 @@ Character.prototype = {
 				direction: this.position.direction,
 				map: this.position.map,
 			},
-			dir;
+			dir; //movement direction
 
 		switch (move) {
 			case 'move_forward': dir = this.moveForward(to);break;
@@ -96,22 +96,29 @@ Character.prototype = {
 			case 'move_right':
 				var targetSquare = this.map.getSquare(to.x, to.y);
 				doMove = square.triggerOnWalk(this, from, to, dir);
-				//doMove = square.triggerOnLeave(this, from, to, dir);
-				//targetSquare.triggerOnEnter(this, from, to);
-				//targetSquare.triggerOnLook(this, from, to);
-
+				if (doMove) {
+					doMove = square.triggerOnLeave(this, from, to, dir);
+				}
+				if (doMove) {
+					doMove = targetSquare.triggerOnEnter(this, from, to, dir);
+				}
+				if (doMove) {
+					targetSquare.triggerOnLook(this, from, to, dir);
+				}
 				break;
 			case 'turn_left':
 			case 'turn_right':
-				//square.triggerOnLook(this, from, to);
-
+				if (doMove) {
+					doMove = square.triggerOnRotate(this, from, to, dir);
+					square.triggerOnLook(this, from, to, dir);
+				}
 				break;
 		}
 
-
-
 		if (doMove) {
 			this.position = to;
+		} else {
+			square.triggerOnLook(this, from, to, dir);
 		}
 
 		callback();

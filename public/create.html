@@ -78,7 +78,7 @@
 				top: 0;
 				right: 0;
 			}
-			#element .events ul li .controls a {
+			#element .events ul li .controls span {
 				display: block;
 				float: left;
 				margin-left: 1px;
@@ -87,6 +87,7 @@
 				background: #BBB;
 				text-decoration: none;
 				text-align: center;
+				cursor: pointer;
 			}
 			#element .events ul li .controls a:hover {
 				background: #DDD;
@@ -118,9 +119,9 @@
 				<ul>
 					<li class="mock">
 						<div class="controls">
-							<a href="#" class="up" title="Move up">&uarr;</a>
-							<a href="#" class="down" title="Move down">&darr;</a>
-							<a href="#" class="remove" title="Remove">&times;</a>
+							<span href="#" class="up" title="Move up">&uarr;</span>
+							<span href="#" class="down" title="Move down">&darr;</span>
+							<span href="#" class="remove" title="Remove">&times;</span>
 						</div>
 						<p class="type"></p> 
 						<p class="value"></p>
@@ -142,7 +143,7 @@
 		</div>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.2.3/json3.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 		<script src="/js/create.model.Map.js"></script>
 		<script src="/js/create.model.MapSquare.js"></script>
 		<script src="/js/create.main.js"></script>
@@ -160,17 +161,32 @@
 					MAP.save();
 				})
 
+				var $maps = $('#maps');
 				Map.findAll(function (data) {
-					var $maps = $('#maps');
 					for (var i = 0, map; map = data[i]; i++) {
 						$maps.append(
 							$('<li/>').append(
-								$('<a/>', {href: map._id, text: map.title + ' (' + map.code + ')'})
+								$('<a/>', {href: map._id, text: map.title + ' (' + map.code + ') (' + map._id + ')'})
 							)
 						);
 					}
 				});
 
+				$maps.on('click', 'li a', function (e) {
+					e.preventDefault();
+
+					initMap();
+					MAP = new Map($(this).attr('href'), function () {
+						drawMap(MAP);
+					});
+				});
+
+
+
+				initMap();
+				MAP = new Map('52067e6a2dd065274b000001', function () {
+					drawMap(MAP);
+				});
 
 
 				/*
@@ -181,10 +197,6 @@
 				MAP.save();
 				//*/
 				//*
-				initMap();
-				MAP = new Map('52067e6a2dd065274b000001', function () {
-					drawMap(MAP);
-				});
 				//*/
 				//console.log(MAP.toJSON());
 
@@ -192,7 +204,10 @@
 			});
 
 			var initMap = function () {
-				var $sq, $square = $('<div/>', {'class': 'square'});
+				var $sq,
+					$square = $('<div/>', {'class': 'square'});
+				$map.empty();
+
 				$square.append($('<div/>', {'class': 'wall north'}));
 				$square.append($('<div/>', {'class': 'wall east'}));
 				$square.append($('<div/>', {'class': 'wall south'}));

@@ -81,10 +81,10 @@ Map.prototype = {
 		}
 
 		$.ajax(url, {
-			data: JSON.stringify(this.toJSON()),
-			contentType: 'application/json',
-			type: 'post'
-		})
+				data: JSON.stringify(this.toJSON()),
+				contentType: 'application/json',
+				type: 'post'
+			})
 			.success(success)
 			.error(error);
 	},
