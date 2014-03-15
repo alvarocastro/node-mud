@@ -58,8 +58,8 @@ app.get('/create', function (req, res) {
 	res.sendfile(__dirname + '/public/create.html');
 });
 
-var cid = '520454659cad8f5f39000001';
 
+var cid = '520454659cad8f5f39000001';
 app.get('/game', function (req, res) {
 	console.log('# REQUEST: ' + (new Date()).getTime());
 	var c = Character.get('Moltar'),

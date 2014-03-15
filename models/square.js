@@ -7,22 +7,25 @@ var Square = function (data) {
 
 Square.prototype = {
 	//square
-	triggerOnRotate: function () {
+	triggerOnRotate: function (c, op, tp, dir) {
 		console.log('- EVENT: onRotate(x:' + this.x + '|y:' + this.y + ')');
+		return true;
 	},
 
 	//square
-	triggerOnEnter: function () {
+	triggerOnEnter: function (c, op, tp, dir) {
 		console.log('- EVENT: onEnter(x:' + this.x + '|y:' + this.y + ')');
+		return true;
 	},
 
 	//square
 	triggerOnLeave: function (c, op, tp, dir) {
 		console.log('- EVENT: onLeave(x:' + this.x + '|y:' + this.y + ')');
+		return true;
 	},
 
 	//wall
-	triggerOnLook: function () {
+	triggerOnLook: function (c, op, tp, dir) {
 		console.log('- EVENT: onLook(x:' + this.x + '|y:' + this.y + ')');
 		return this.executeEvents(this.events[dir], c);
 	},
@@ -36,6 +39,7 @@ Square.prototype = {
 	//wall|square
 	triggerOnItemUse: function () {
 		console.log('- EVENT: onItemUse(x:' + this.x + '|y:' + this.y + ')');
+		return true;
 	},
 
 	executeEvents: function (events, c) {

@@ -11,6 +11,8 @@ Game.View = function (game) {
 	this.game = game;
 	this.element = game.elements.view;
 
+	this.previousPosition = false;
+
 	this.init();
 };
 
@@ -61,10 +63,25 @@ Game.View.prototype = {
 	},
 
 	render: function (character, squares, action) {
+		console.log('character', character);
 		var x = character.x,
 			y = character.y,
 			d = character.direction,
 			delay = action ? 250 : 0;
+
+		if (this.previousPosition) {
+			if (this.previousPosition.x == x &&
+				this.previousPosition.y == y &&
+				this.previousPosition.d == d) {
+				return false;
+			}
+		}
+
+		this.previousPosition = {
+			x: x,
+			y: y,
+			d: d
+		};
 
 		//this.element.rmClass(/\bshow-\S+/g).addClass('show-' + d);
 
