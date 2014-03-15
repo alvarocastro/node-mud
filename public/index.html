@@ -35,10 +35,31 @@
 				});
 				*/
 			});
+			$(function () {
+				$('#numpad div').on('click', function () {
+					var e = $.Event('keydown');
+					e.keyCode = $(this).attr('class');
+					$(document).trigger(e);
+				});
+			});
 		</script>
 
 		<style>
 			* {margin: 0; padding: 0;}
+			#numpad {
+				width: 480px;
+				height: 240px;
+				margin: 30px auto;
+			}
+			#numpad div {
+				width: 31%;
+				height: 31%;
+				margin: 1%;
+				background: red;
+				float: left;
+				text-align: center;
+				font-size: 60px;
+			}
 		</style>
 	</head>
 
@@ -90,5 +111,16 @@
 		</div>
 
 		<div id="chat_log"></div>
+		<div id="numpad">
+			<div class="103">7</div>
+			<div class="104">8</div>
+			<div class="105">9</div>
+			<div class="100">4</div>
+			<div class="101">5</div>
+			<div class="102">6</div>
+			<div class="97">1</div>
+			<div class="98">2</div>
+			<div class="99">3</div>
+		</div>
 	</body>
 </html>
